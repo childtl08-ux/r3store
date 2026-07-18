@@ -1,0 +1,4766 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>R3 Store | Digital Game Store</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Barlow+Condensed:wght@600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<style>
+:root {
+  --red: #1a6bbf;
+  --red-dark: #145299;
+  --red-light: #2282e8;
+  --white: #ffffff;
+  --off-white: #f0f0f0;
+  --gray: #888;
+  --dark: #0a0a0a;
+  --card-bg: #141414;
+  --card-border: #222;
+  --ps5-color: #7b68ee;
+  --ps4-color: #4a9eff;
+  --sec-color: #c8a02a;
+  --green: #25d366;
+  --orange: #e8820a;
+  --pink: #ff2d6a;
+  --pink-dark: #d61852;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--dark); }
+::-webkit-scrollbar-thumb { background: var(--red); border-radius: 2px; }
+
+body {
+  font-family: 'Cairo', sans-serif;
+  background: var(--dark);
+  color: var(--white);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ===== SPLASH SCREEN ===== */
+#splash {
+  position: fixed;
+  inset: 0;
+  background: #000;
+  z-index: 99999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.splash-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 4rem;
+  font-weight: 900;
+  letter-spacing: 10px;
+  color: #fff;
+  text-transform: uppercase;
+}
+.splash-sub {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 1rem;
+  letter-spacing: 8px;
+  color: var(--red);
+  text-transform: uppercase;
+  font-weight: 700;
+}
+.splash-tag {
+  font-size: 0.75rem;
+  color: #555;
+  letter-spacing: 3px;
+  font-family: 'Barlow Condensed', sans-serif;
+}
+.splash-bar {
+  width: 200px;
+  height: 2px;
+  background: #222;
+  border-radius: 1px;
+  margin-top: 20px;
+  overflow: hidden;
+  position: relative;
+}
+.splash-bar-fill {
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 0;
+  background: var(--red);
+  animation: loadbar 1.8s cubic-bezier(.4,0,.2,1) forwards;
+}
+@keyframes loadbar { to { width: 100%; } }
+
+/* ===== HEADER ===== */
+header {
+  position: sticky;
+  top: 0;
+  z-index: 500;
+  background: rgba(10,10,10,0.97);
+  border-bottom: 1px solid #1a1a1a;
+  backdrop-filter: blur(12px);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  width: 100%;
+}
+.header-brand {
+  flex-shrink: 0;
+}
+.hb-name {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 1.4rem;
+  font-weight: 900;
+  letter-spacing: 3px;
+  color: #fff;
+  line-height: 1;
+}
+.hb-sub {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 0.55rem;
+  letter-spacing: 3px;
+  color: var(--red);
+  font-weight: 700;
+}
+.search-wrap {
+  flex: 1;
+  position: relative;
+}
+.search-wrap i {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #555;
+  font-size: 0.85rem;
+}
+.search-wrap input {
+  width: 100%;
+  padding: 9px 34px 9px 14px;
+  background: #141414;
+  border: 1px solid #2a2a2a;
+  border-radius: 50px;
+  color: #fff;
+  font-family: 'Cairo';
+  font-size: 0.82rem;
+  outline: none;
+  transition: .3s;
+}
+.search-wrap input:focus { border-color: #444; }
+.search-wrap input::placeholder { color: #444; font-size: 0.78rem; }
+
+.cart-btn {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--pink);
+  color: #fff;
+  border: none;
+  border-radius: 50px;
+  padding: 9px 14px;
+  font-family: 'Cairo';
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: .2s;
+  white-space: nowrap;
+}
+.cart-btn:hover { background: var(--pink-dark); }
+.cart-count {
+  background: #fff;
+  color: var(--pink);
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.62rem;
+  font-weight: 900;
+}
+
+/* ===== RECENTLY VIEWED STRIP ===== */
+.recent-strip {
+  padding: 10px 14px 4px;
+}
+.recent-strip-title {
+  font-size: 0.72rem;
+  color: #777;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+.recent-strip-items {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding-bottom: 4px;
+}
+.recent-strip-items::-webkit-scrollbar { display: none; }
+.recent-item {
+  flex-shrink: 0;
+  width: 76px;
+  cursor: pointer;
+  text-align: center;
+}
+.recent-item img, .recent-item-icon {
+  width: 76px;
+  height: 76px;
+  border-radius: 12px;
+  object-fit: cover;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+}
+.recent-item-name {
+  font-size: 0.6rem;
+  color: #888;
+  margin-top: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ===== DAILY DEALS COUNTDOWN ===== */
+.daily-countdown {
+  margin: 10px 14px 0;
+  padding: 10px 14px;
+  background: linear-gradient(90deg, rgba(232,130,10,0.15), rgba(232,130,10,0.03));
+  border: 1px solid rgba(232,130,10,0.3);
+  border-radius: 12px;
+  color: var(--orange);
+  font-size: 0.8rem;
+  font-weight: 700;
+  display: none;
+  align-items: center;
+  gap: 8px;
+}
+.daily-countdown.show { display: flex; }
+
+/* ===== FAQ ===== */
+.faq-section {
+  padding: 20px 14px 140px;
+}
+.faq-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 1.3rem;
+  font-weight: 900;
+  letter-spacing: 2px;
+  color: #fff;
+  margin-bottom: 12px;
+}
+.faq-item {
+  border-bottom: 1px solid #1a1a1a;
+}
+.faq-q {
+  width: 100%;
+  background: none;
+  border: none;
+  color: #ddd;
+  font-family: 'Cairo';
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-align: right;
+  padding: 14px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+}
+.faq-q i { color: #555; transition: .25s; font-size: 0.75rem; }
+.faq-q.open i { transform: rotate(180deg); color: var(--red); }
+.faq-a {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height .3s ease;
+  color: #888;
+  font-size: 0.78rem;
+  line-height: 1.8;
+}
+.faq-a.open { max-height: 200px; padding-bottom: 14px; }
+
+/* ===== GAME CATEGORIES / TABS ===== */
+.tabs-scroll {
+  display: flex;
+  gap: 8px;
+  padding: 14px 14px 6px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.tabs-scroll::-webkit-scrollbar { display: none; }
+.tab-btn {
+  background: var(--card-bg);
+  color: #666;
+  border: 1px solid #222;
+  padding: 8px 16px;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: .25s;
+  font-weight: 700;
+  font-size: 0.72rem;
+  white-space: nowrap;
+  font-family: 'Cairo';
+  outline: none;
+}
+.tab-btn.active {
+  background: var(--red);
+  color: #fff;
+  border-color: var(--red);
+}
+
+/* ===== GAME GRID ===== */
+.game-grid {
+  display: none;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  padding: 10px 14px 120px;
+}
+.game-grid.active { display: grid; }
+
+/* ===== GAME CARD ===== */
+.game-card {
+  background: var(--card-bg);
+  border-radius: 16px;
+  border: 1px solid var(--card-border);
+  overflow: hidden;
+  cursor: pointer;
+  transition: .3s;
+  position: relative;
+}
+.game-card:hover {
+  border-color: #333;
+  transform: translateY(-2px);
+}
+.game-card-img {
+  width: 100%;
+  aspect-ratio: 3/2;
+  object-fit: cover;
+  display: block;
+  background: #111;
+}
+.game-card-img-placeholder {
+  width: 100%;
+  aspect-ratio: 3/2;
+  background: linear-gradient(135deg, #111, #1a1a1a);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.4rem;
+}
+
+/* Stock badge */
+.stock-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  padding: 3px 10px;
+  border-radius: 50px;
+  font-size: 0.58rem;
+  font-weight: 700;
+  font-family: 'Barlow Condensed', sans-serif;
+  letter-spacing: 1px;
+}
+.stock-low { background: var(--orange); color: #fff; }
+.stock-in { background: #25a853; color: #fff; }
+.stock-out { background: #333; color: #666; }
+
+/* Wishlist heart */
+.wishlist-heart {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  z-index: 5;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.55);
+  backdrop-filter: blur(4px);
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: .2s;
+}
+.wishlist-heart i { color: #fff; font-size: 0.78rem; transition: .2s; }
+.wishlist-heart.active { background: rgba(255,59,92,0.18); }
+.wishlist-heart.active i { color: #ff3b5c; }
+.wishlist-heart:active { transform: scale(1.25); }
+
+/* Card entrance animation (replays each time a tab becomes active) */
+@keyframes cardPopIn {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.game-grid.active .game-card { animation: cardPopIn .45s ease both; }
+
+/* Empty state (no search / wishlist results) */
+.empty-state-msg {
+  grid-column: 1 / -1;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 60px 20px;
+  color: #555;
+  text-align: center;
+}
+.empty-state-msg i { font-size: 2rem; color: #333; }
+.empty-state-msg p { font-size: 0.85rem; }
+/* ===== WORLD CUP PREDICTIONS ===== */
+.predictions-inner {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.pred-intro {
+  background: linear-gradient(135deg, #14213d, #0d0d0d);
+  border: 1px solid #223;
+  border-radius: 16px;
+  padding: 16px;
+}
+.pred-intro-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 1.3rem;
+  font-weight: 900;
+  color: #fff;
+  margin-bottom: 6px;
+}
+.pred-intro-text { font-size: 0.8rem; color: #999; line-height: 1.6; }
+.prediction-card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 16px;
+  padding: 16px;
+  text-align: center;
+  transition: .2s;
+}
+.prediction-card:hover { border-color: #333; }
+.prediction-card.pred-final { border-color: var(--sec-color); }
+.pred-stage {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 0.7rem;
+  letter-spacing: 2px;
+  color: var(--red-light);
+  font-weight: 700;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+}
+.pred-final .pred-stage { color: var(--sec-color); }
+.pred-teams {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 8px;
+}
+.pred-vs { color: #555; margin: 0 8px; }
+.pred-date {
+  font-size: 0.72rem;
+  color: #666;
+  margin-bottom: 14px;
+}
+.pred-date i { margin-left: 5px; }
+.pred-btn {
+  width: 100%;
+  padding: 12px;
+  background: var(--red);
+  border: none;
+  border-radius: 12px;
+  color: #fff;
+  font-family: 'Cairo';
+  font-weight: 700;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: .2s;
+}
+.pred-btn:hover { background: var(--red-light); }
+
+/* ===== PREDICTION MODAL ===== */
+#predictionModal {
+  position: fixed;
+  inset: 0;
+  z-index: 900;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+#predictionModal.open { display: flex; }
+.pred-score-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+.pred-score-team {
+  flex: 1;
+  text-align: center;
+  font-size: 0.78rem;
+  color: #999;
+}
+.pred-score-input {
+  width: 100%;
+  padding: 12px;
+  background: #111;
+  border: 1px solid #2a2a2a;
+  border-radius: 12px;
+  color: #fff;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 1.3rem;
+  font-weight: 700;
+  text-align: center;
+  outline: none;
+  margin-top: 6px;
+}
+.pred-score-sep {
+  font-size: 1.4rem;
+  color: #444;
+  font-weight: 900;
+  padding-top: 14px;
+}
+.pred-upload-label {
+  font-size: 0.68rem;
+  color: #666;
+  margin-bottom: 6px;
+}
+
+/* Header hide-on-scroll-down */
+header { transition: transform .3s ease; }
+header.header-hidden { transform: translateY(-100%); }
+
+/* ===== TRUST BAR ===== */
+.trust-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background: #1b1b1b;
+  border-bottom: 1px solid #222;
+  padding: 8px 6px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.trust-bar::-webkit-scrollbar { display: none; }
+.trust-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: #ccc;
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+  padding: 0 8px;
+  flex-shrink: 0;
+}
+.trust-item i { color: #ff2d6a; font-size: 0.72rem; }
+.trust-sep { width: 1px; height: 14px; background: #2a2a2a; flex-shrink: 0; }
+
+/* ===== HAMBURGER + SIDE DRAWER ===== */
+.hamburger-btn {
+  flex-shrink: 0;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: var(--card-bg);
+  border: 1px solid #2a2a2a;
+  color: #ddd;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1rem;
+}
+.side-drawer-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  z-index: 950;
+  display: none;
+}
+.side-drawer-overlay.open { display: block; }
+.side-drawer {
+  position: fixed;
+  top: 0; bottom: 0; right: 0;
+  width: 82%;
+  max-width: 320px;
+  background: #101010;
+  z-index: 960;
+  transform: translateX(100%);
+  transition: transform .32s cubic-bezier(.23,1,.32,1);
+  overflow-y: auto;
+  border-left: 1px solid #1e1e1e;
+}
+.side-drawer.open { transform: translateX(0); }
+.drawer-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 18px 14px;
+  border-bottom: 1px solid #1a1a1a;
+}
+.drawer-head img { height: 40px; }
+.drawer-close {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: #1a1a1a;
+  border: none;
+  color: #999;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+.drawer-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px 18px;
+  border-bottom: 1px solid #161616;
+  color: #ddd;
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+  background: none;
+  border-right: none; border-left: none; border-top: none;
+  width: 100%;
+  text-align: right;
+  font-family: 'Cairo';
+}
+.drawer-item i.di-arrow { color: #444; font-size: 0.75rem; }
+.drawer-item i.di-icon { color: var(--red-light); margin-left: 10px; width: 18px; text-align: center; }
+.drawer-social {
+  display: flex;
+  gap: 14px;
+  padding: 18px;
+}
+.drawer-social a {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: #1a1a1a;
+  display: flex; align-items: center; justify-content: center;
+  color: #ccc;
+  text-decoration: none;
+}
+
+/* ===== HERO CAROUSEL ===== */
+.hero-carousel {
+  position: relative;
+  margin: 12px 14px 0;
+  border-radius: 18px;
+  overflow: hidden;
+  height: 190px;
+  background: #111;
+}
+.hero-slide {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  opacity: 0;
+  transition: opacity .6s ease;
+  display: flex;
+  align-items: flex-end;
+}
+.hero-slide.active { opacity: 1; }
+.hero-slide::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,0.05) 30%, rgba(5,5,5,0.92) 100%);
+}
+.hero-slide-content {
+  position: relative;
+  z-index: 1;
+  padding: 16px 18px;
+  width: 100%;
+}
+.hero-slide-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: #fff;
+  letter-spacing: 1px;
+}
+.hero-slide-sub {
+  font-size: 0.72rem;
+  color: #bbb;
+  margin: 3px 0 10px;
+}
+.hero-slide-btn {
+  display: inline-block;
+  background: #fff;
+  color: #111;
+  border: none;
+  border-radius: 50px;
+  padding: 8px 20px;
+  font-family: 'Cairo';
+  font-weight: 800;
+  font-size: 0.75rem;
+  cursor: pointer;
+}
+.hero-dots {
+  position: absolute;
+  bottom: 10px;
+  left: 14px;
+  z-index: 2;
+  display: flex;
+  gap: 5px;
+}
+.hero-dot { width: 5px; height: 5px; border-radius: 50%; background: rgba(255,255,255,0.35); }
+.hero-dot.active { background: #fff; width: 14px; border-radius: 3px; transition: .3s; }
+
+/* ===== BIG SECTION TITLE (زي Play Pack) ===== */
+.big-section-title {
+  text-align: center;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 900;
+  font-size: 2.1rem;
+  letter-spacing: 1px;
+  line-height: 1.15;
+  color: var(--ps4-color);
+  text-shadow: 0 0 26px rgba(74,158,255,0.35);
+  margin: 26px 14px 4px;
+}
+.big-section-sub {
+  text-align: center;
+  color: #555;
+  font-size: 0.72rem;
+  margin-bottom: 4px;
+  letter-spacing: 1px;
+}
+.view-all-wrap { display: flex; justify-content: center; padding: 6px 14px 4px; }
+.view-all-btn {
+  background: #ff2d6a;
+  color: #fff;
+  border: none;
+  border-radius: 50px;
+  padding: 10px 30px;
+  font-family: 'Cairo';
+  font-weight: 800;
+  font-size: 0.82rem;
+  cursor: pointer;
+}
+
+/* ===== CATEGORIES GRID ===== */
+.categories-section { padding: 8px 14px 6px; }
+.categories-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-top: 10px;
+}
+.category-card {
+  position: relative;
+  height: 92px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 4px;
+  cursor: pointer;
+  border: 1px solid rgba(255,255,255,0.06);
+  overflow: hidden;
+  transition: .2s;
+}
+.category-card:active { transform: scale(0.97); }
+.category-card i { font-size: 1.4rem; color: #fff; }
+.category-card span {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 800;
+  font-size: 0.9rem;
+  letter-spacing: 1px;
+  color: #fff;
+  text-align: center;
+  padding: 0 6px;
+}
+.cc-1 { background: linear-gradient(135deg, #1a4b9e, #0d275a); }
+.cc-2 { background: linear-gradient(135deg, #2a2a2a, #0a0a0a); }
+.cc-3 { background: linear-gradient(135deg, #1e6b3c, #0c2a17); }
+.cc-4 { background: linear-gradient(135deg, #7b3fbf, #341a52); }
+.cc-5 { background: linear-gradient(135deg, #c8a02a, #5c4611); }
+.cc-6 { background: linear-gradient(135deg, #e8820a, #6b3b04); }
+.cc-7 { background: linear-gradient(135deg, #1a6bbf, #0a2f52); }
+.cc-8 { background: linear-gradient(135deg, #b0165c, #48082a); }
+
+/* Wishlist header button */
+.wishlist-btn {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  background: var(--card-bg);
+  color: #888;
+  border: 1px solid #2a2a2a;
+  border-radius: 50%;
+  width: 38px;
+  height: 38px;
+  cursor: pointer;
+  transition: .2s;
+  position: relative;
+  font-size: 0.9rem;
+}
+.wishlist-btn.active { color: #ff3b5c; border-color: #ff3b5c44; background: rgba(255,59,92,0.1); }
+.wishlist-badge {
+  position: absolute;
+  top: -4px;
+  left: -4px;
+  background: #ff3b5c;
+  color: #fff;
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+  font-size: 0.55rem;
+  font-weight: 900;
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+.wishlist-badge.show { display: flex; }
+
+/* Search clear button */
+.search-clear-btn {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: #2a2a2a;
+  color: #999;
+  border: none;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  font-size: 0.6rem;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.search-clear-btn.show { display: flex; }
+
+/* Back to top */
+.back-to-top {
+  position: fixed;
+  bottom: 76px;
+  left: 14px;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: var(--card-bg);
+  border: 1px solid #2a2a2a;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+  cursor: pointer;
+  z-index: 400;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(20px);
+  transition: .3s;
+}
+.back-to-top.show { opacity: 1; visibility: visible; transform: translateY(0); }
+
+/* WhatsApp floating quick-contact bubble */
+.wa-float {
+  position: fixed;
+  bottom: 14px;
+  right: 14px;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: var(--green);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 20px rgba(37,211,102,0.5);
+  cursor: pointer;
+  z-index: 400;
+  text-decoration: none;
+}
+.wa-float i { color: #fff; font-size: 1.5rem; }
+.wa-float-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: var(--green);
+  animation: waPulse 2s infinite;
+  z-index: -1;
+}
+@keyframes waPulse {
+  0% { transform: scale(1); opacity: 0.6; }
+  100% { transform: scale(1.7); opacity: 0; }
+}
+
+.game-card-body {
+  padding: 10px;
+}
+.game-genre {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 0.6rem;
+  letter-spacing: 2px;
+  color: var(--red);
+  font-weight: 700;
+  text-transform: uppercase;
+}
+.game-size {
+  font-size: 0.6rem;
+  color: #444;
+  margin-right: 4px;
+}
+.game-name {
+  font-weight: 700;
+  font-size: 0.82rem;
+  color: #ddd;
+  margin: 4px 0 8px;
+  line-height: 1.25;
+}
+.game-prices {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 10px;
+}
+.price-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.platform-badge {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  padding: 2px 7px;
+  border-radius: 5px;
+}
+.pb-ps5 { background: rgba(123,104,238,0.2); color: var(--ps5-color); border: 1px solid rgba(123,104,238,0.3); }
+.pb-ps4 { background: rgba(74,158,255,0.2); color: var(--ps4-color); border: 1px solid rgba(74,158,255,0.3); }
+.pb-sec { background: rgba(200,160,42,0.2); color: var(--sec-color); border: 1px solid rgba(200,160,42,0.3); }
+.price-val {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #bbb;
+}
+.price-val.na { color: #333; }
+.card-actions {
+  display: flex;
+  gap: 6px;
+}
+.btn-buy {
+  flex: 1;
+  background: var(--pink);
+  color: #fff;
+  border: none;
+  padding: 9px;
+  border-radius: 50px;
+  font-weight: 700;
+  font-size: 0.72rem;
+  cursor: pointer;
+  font-family: 'Cairo';
+  letter-spacing: 1px;
+  transition: .2s;
+}
+.btn-buy:hover { background: var(--pink-dark); }
+.btn-cart-icon {
+  width: 36px;
+  background: #1f1f1f;
+  border: 1px solid #2a2a2a;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #777;
+  font-size: 0.85rem;
+  transition: .2s;
+  flex-shrink: 0;
+}
+.btn-cart-icon:hover { color: var(--red); border-color: var(--red); }
+
+/* ===== DETAIL PANEL (slides up) ===== */
+#detailPanel {
+  position: fixed;
+  inset: 0;
+  z-index: 800;
+  display: none;
+  align-items: flex-end;
+  justify-content: center;
+}
+#detailPanel.open { display: flex; }
+.detail-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.85);
+  backdrop-filter: blur(6px);
+}
+.detail-sheet {
+  position: relative;
+  z-index: 1;
+  background: var(--card-bg);
+  border-radius: 24px 24px 0 0;
+  border: 1px solid #222;
+  border-bottom: none;
+  width: 100%;
+  max-width: 500px;
+  max-height: 92vh;
+  overflow-y: auto;
+  animation: slideUp 0.35s cubic-bezier(.23,1,.32,1);
+}
+@keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+.detail-handle {
+  width: 36px; height: 3px;
+  background: #333;
+  border-radius: 2px;
+  margin: 12px auto 0;
+}
+.detail-img-wrap {
+  position: relative;
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+}
+.detail-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.detail-img-placeholder {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(180deg, #1a1a1a, #0d0d0d);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 4rem;
+}
+.detail-img-fade {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 80px;
+  background: linear-gradient(transparent, var(--card-bg));
+}
+.detail-body {
+  padding: 16px 18px 30px;
+}
+.detail-title-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+.detail-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 2rem;
+  font-weight: 900;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: #fff;
+  margin-bottom: 8px;
+}
+.detail-share-btn {
+  flex-shrink: 0;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--card-bg);
+  border: 1px solid #2a2a2a;
+  color: #ccc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  margin-top: 4px;
+  font-size: 0.85rem;
+}
+.detail-share-btn:active { transform: scale(0.9); }
+.detail-tags {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+.detail-tag {
+  background: #1a1a1a;
+  border: 1px solid #2a2a2a;
+  border-radius: 50px;
+  padding: 3px 12px;
+  font-size: 0.68rem;
+  color: #888;
+  font-family: 'Barlow Condensed', sans-serif;
+  letter-spacing: 1px;
+}
+.detail-genre { color: var(--red); border-color: rgba(224,59,45,0.3); background: rgba(224,59,45,0.08); }
+.detail-desc {
+  font-size: 0.82rem;
+  color: #777;
+  line-height: 1.65;
+  margin-bottom: 20px;
+}
+.detail-section-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 0.65rem;
+  letter-spacing: 4px;
+  color: #555;
+  font-weight: 700;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+}
+
+/* ===== RATING ROW ===== */
+.detail-rating-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.det-stars { color: #ffc93c; font-size: 0.85rem; letter-spacing: 2px; }
+.det-rating-num { color: #555; font-size: 0.75rem; }
+
+/* ===== LANGUAGE PILL ===== */
+.lang-pill {
+  display: inline-block;
+  background: #fff;
+  color: #111;
+  border-radius: 50px;
+  padding: 10px 20px;
+  font-weight: 800;
+  font-size: 0.8rem;
+  margin-bottom: 18px;
+}
+
+/* ===== PRICE ROW ===== */
+.detail-price-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 16px 0 6px;
+  flex-wrap: wrap;
+}
+.dp-old {
+  color: #555;
+  text-decoration: line-through;
+  font-size: 0.85rem;
+}
+.dp-current {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #fff;
+}
+.dp-sale-badge {
+  background: #fff;
+  color: #111;
+  border-radius: 50px;
+  padding: 3px 14px;
+  font-size: 0.72rem;
+  font-weight: 800;
+}
+
+/* ===== NOTE BOX / MINI ROWS ===== */
+.detail-note-box {
+  font-size: 0.72rem;
+  color: #666;
+  line-height: 1.7;
+  margin-bottom: 16px;
+}
+.detail-mini-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.82rem;
+  color: #ddd;
+  margin-bottom: 12px;
+}
+.detail-mini-row i { color: #888; width: 16px; text-align: center; }
+
+/* ===== QUANTITY STEPPER ===== */
+.qty-stepper {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid #2a2a2a;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 18px;
+}
+.qty-stepper button {
+  width: 40px;
+  height: 40px;
+  background: #111;
+  border: none;
+  color: #ccc;
+  font-size: 1.1rem;
+  cursor: pointer;
+}
+.qty-stepper span {
+  width: 44px;
+  text-align: center;
+  font-weight: 700;
+  color: #fff;
+}
+
+/* ===== AGREE CHECKBOX ===== */
+.agree-box {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  border: 1px solid #222;
+  border-radius: 14px;
+  padding: 14px;
+  margin-bottom: 14px;
+  font-size: 0.74rem;
+  color: #999;
+  line-height: 1.6;
+}
+.agree-box input { accent-color: var(--pink); width: 18px; height: 18px; flex-shrink: 0; margin-top: 2px; }
+.agree-box a { color: var(--pink); }
+
+/* ===== DETAIL ACCORDION ===== */
+.detail-accordion { margin-top: 18px; border-top: 1px solid #1a1a1a; }
+.detail-accordion-head {
+  width: 100%;
+  background: none;
+  border: none;
+  color: #fff;
+  font-family: 'Cairo';
+  font-weight: 800;
+  font-size: 0.9rem;
+  padding: 16px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+}
+.detail-accordion-head i.fa-chevron-down { transition: .25s; color: #666; font-size: 0.8rem; }
+.detail-accordion-head.open i.fa-chevron-down { transform: rotate(180deg); }
+.detail-accordion-body {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height .3s ease;
+  font-size: 0.78rem;
+  color: #999;
+  line-height: 1.9;
+}
+.detail-accordion-body.open { max-height: 600px; padding-bottom: 16px; }
+.account-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+.account-option {
+  border: 1.5px solid #333;
+  border-radius: 50px;
+  background: transparent;
+  color: #ddd;
+  padding: 10px 20px;
+  font-family: 'Cairo';
+  font-weight: 700;
+  font-size: 0.82rem;
+  cursor: pointer;
+  transition: .2s;
+}
+.account-option.selected {
+  background: #fff;
+  color: #111;
+  border-color: #fff;
+}
+.account-option.disabled {
+  color: #444;
+  text-decoration: line-through;
+  border-color: #222;
+  cursor: not-allowed;
+  opacity: .6;
+}
+
+.detail-order-btn {
+  width: 100%;
+  padding: 15px;
+  background: #1a1a1a;
+  border: 1px solid #2a2a2a;
+  border-radius: 50px;
+  color: #555;
+  font-family: 'Cairo';
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: not-allowed;
+  letter-spacing: 1px;
+  transition: .3s;
+  text-align: center;
+}
+.detail-order-btn.ready {
+  background: var(--pink);
+  border-color: var(--pink);
+  color: #fff;
+  cursor: pointer;
+}
+.detail-order-btn.ready:hover { background: var(--pink-dark); }
+
+/* Play Pack style secondary buttons under the order button */
+.detail-btn-outline {
+  width: 100%;
+  padding: 14px;
+  margin-top: 10px;
+  background: transparent;
+  border: 1.5px solid var(--pink);
+  border-radius: 50px;
+  color: var(--pink);
+  font-family: 'Cairo';
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: .2s;
+}
+.detail-btn-outline:hover { background: rgba(255,45,106,0.08); }
+.detail-btn-outline.active { background: rgba(255,45,106,0.12); }
+.detail-points-note {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--green);
+  font-size: 0.78rem;
+  font-weight: 700;
+  margin-top: 16px;
+}
+
+/* ===== ADMIN HIDDEN TRIGGER ===== */
+.admin-trigger {
+  position: fixed;
+  bottom: 6px;
+  left: 6px;
+  width: 22px;
+  height: 22px;
+  z-index: 998;
+  opacity: 0.02;
+  background: transparent;
+  border: none;
+  cursor: default;
+  padding: 0;
+}
+.admin-trigger:active { opacity: 0.15; }
+
+/* أزرار النسخ مخفية عن الزباين افتراضيًا، بتظهر بس لما وضع الأدمن يتفعل */
+.btn-copy-price { display: none; }
+body.admin-unlocked .btn-copy-price { display: inline-flex; }
+
+/* ===== ADMIN GATE MODAL ===== */
+#adminGateModal {
+  position: fixed;
+  inset: 0;
+  z-index: 950;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+#adminGateModal.open { display: flex; }
+.admin-gate-box {
+  position: relative;
+  z-index: 1;
+  background: var(--card-bg);
+  border: 1px solid #222;
+  border-radius: 20px;
+  padding: 24px 20px;
+  width: 100%;
+  max-width: 320px;
+  text-align: center;
+}
+.admin-gate-box i.fa-lock { font-size: 1.6rem; color: var(--red); margin-bottom: 10px; }
+.admin-gate-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 1.3rem;
+  font-weight: 900;
+  letter-spacing: 2px;
+  color: #fff;
+  margin-bottom: 14px;
+}
+.admin-gate-input {
+  width: 100%;
+  padding: 12px 14px;
+  background: #111;
+  border: 1px solid #2a2a2a;
+  border-radius: 12px;
+  color: #fff;
+  font-family: 'Cairo';
+  font-size: 0.9rem;
+  outline: none;
+  margin-bottom: 12px;
+  text-align: center;
+  letter-spacing: 3px;
+}
+.admin-gate-input:focus { border-color: var(--red); }
+.admin-gate-btn {
+  width: 100%;
+  padding: 12px;
+  background: var(--red);
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  font-family: 'Cairo';
+  font-weight: 700;
+  font-size: 0.9rem;
+  cursor: pointer;
+  margin-bottom: 8px;
+}
+.admin-gate-btn:hover { background: var(--red-light); }
+.admin-gate-cancel {
+  width: 100%;
+  padding: 10px;
+  background: transparent;
+  color: #666;
+  border: none;
+  font-family: 'Cairo';
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+/* ===== ORDER MODAL ===== */
+#orderModal {
+  position: fixed;
+  inset: 0;
+  z-index: 900;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+#orderModal.open { display: flex; }
+.order-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.9);
+  backdrop-filter: blur(8px);
+}
+.order-box {
+  position: relative;
+  z-index: 1;
+  background: var(--card-bg);
+  border: 1px solid #222;
+  border-radius: 20px;
+  padding: 24px 20px;
+  width: 100%;
+  max-width: 400px;
+  max-height: 92vh;
+  overflow-y: auto;
+}
+.order-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 1.8rem;
+  font-weight: 900;
+  letter-spacing: 3px;
+  color: #fff;
+  margin-bottom: 4px;
+}
+.order-game-name {
+  color: var(--red);
+  font-size: 0.82rem;
+  font-weight: 600;
+  margin-bottom: 18px;
+}
+.order-field-label {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 0.6rem;
+  letter-spacing: 3px;
+  color: #555;
+  font-weight: 700;
+  margin-bottom: 6px;
+  display: block;
+}
+.order-select {
+  width: 100%;
+  padding: 12px 14px;
+  background: #111;
+  border: 1px solid #2a2a2a;
+  border-radius: 12px;
+  color: #fff;
+  font-family: 'Cairo';
+  font-size: 0.85rem;
+  outline: none;
+  margin-bottom: 14px;
+  appearance: none;
+  cursor: pointer;
+}
+.order-discount-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+.order-discount-input {
+  flex: 1;
+  padding: 12px 14px;
+  background: #111;
+  border: 1px solid #2a2a2a;
+  border-radius: 12px;
+  color: #fff;
+  font-family: 'Cairo';
+  font-size: 0.85rem;
+  outline: none;
+}
+.order-discount-input::placeholder { color: #444; }
+.order-apply-btn {
+  padding: 12px 16px;
+  background: #1a1a1a;
+  border: 1px solid #2a2a2a;
+  border-radius: 12px;
+  color: #888;
+  font-family: 'Cairo';
+  font-size: 0.82rem;
+  cursor: pointer;
+  transition: .2s;
+  white-space: nowrap;
+}
+.order-apply-btn:hover { color: #fff; border-color: #444; }
+.order-total-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  background: #0d0d0d;
+  border-radius: 12px;
+  margin-bottom: 14px;
+  border: 1px solid #1a1a1a;
+}
+.order-total-label { font-size: 0.82rem; color: #666; }
+.order-total-val {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--red);
+}
+.order-wa-input {
+  width: 100%;
+  padding: 12px 14px;
+  background: #111;
+  border: 1px solid #2a2a2a;
+  border-radius: 12px;
+  color: #fff;
+  font-family: 'Cairo';
+  font-size: 0.85rem;
+  outline: none;
+  margin-bottom: 14px;
+  direction: ltr;
+}
+.order-wa-input::placeholder { color: #444; direction: rtl; }
+.order-upload-area {
+  border: 1px dashed #2a2a2a;
+  border-radius: 12px;
+  padding: 22px;
+  text-align: center;
+  cursor: pointer;
+  margin-bottom: 18px;
+  transition: .2s;
+}
+.order-upload-area:hover { border-color: var(--red); }
+.order-upload-icon { font-size: 1.8rem; margin-bottom: 6px; }
+.order-upload-text { font-size: 0.72rem; color: #555; }
+.order-upload-sub { font-size: 0.6rem; color: #444; margin-top: 3px; }
+#uploadFileInput { display: none; }
+.order-actions {
+  display: flex;
+  gap: 8px;
+}
+.order-cancel-btn {
+  flex: 1;
+  padding: 13px;
+  background: transparent;
+  border: 1px solid #2a2a2a;
+  border-radius: 12px;
+  color: #666;
+  font-family: 'Cairo';
+  font-size: 0.88rem;
+  cursor: pointer;
+  transition: .2s;
+}
+.order-cancel-btn:hover { color: #fff; border-color: #444; }
+.order-send-btn {
+  flex: 2;
+  padding: 13px;
+  background: var(--red);
+  border: none;
+  border-radius: 12px;
+  color: #fff;
+  font-family: 'Cairo';
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+  letter-spacing: 1px;
+  transition: .2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+.order-send-btn:hover { background: var(--red-light); }
+
+/* ===== CART PANEL ===== */
+#cartPanel {
+  position: fixed;
+  inset: 0;
+  z-index: 800;
+  display: none;
+  align-items: flex-end;
+  justify-content: center;
+}
+#cartPanel.open { display: flex; }
+.cart-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.85); }
+.cart-sheet {
+  position: relative; z-index: 1;
+  background: var(--card-bg);
+  border-radius: 24px 24px 0 0;
+  border: 1px solid #222;
+  border-bottom: none;
+  width: 100%; max-width: 500px;
+  max-height: 85vh; overflow-y: auto;
+  padding: 16px;
+  animation: slideUp 0.35s cubic-bezier(.23,1,.32,1);
+}
+.cart-handle {
+  width: 36px; height: 3px;
+  background: #333; border-radius: 2px;
+  margin: 0 auto 16px;
+}
+.cart-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 900;
+  letter-spacing: 3px;
+  margin-bottom: 14px;
+}
+.cart-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  background: #111;
+  border: 1px solid #1a1a1a;
+  border-radius: 12px;
+  margin-bottom: 8px;
+}
+.ci-name { font-size: 0.82rem; color: #ccc; flex: 1; }
+.ci-price {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--red);
+  margin: 0 10px;
+}
+.ci-del {
+  background: none; border: none;
+  color: #444; cursor: pointer;
+  font-size: 0.9rem; transition: .2s;
+}
+.ci-del:hover { color: var(--red); }
+.cart-total-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  background: #0d0d0d;
+  border-radius: 12px;
+  margin: 10px 0;
+}
+.cart-wa {
+  width: 100%;
+  padding: 12px;
+  background: #111;
+  border: 1px solid #2a2a2a;
+  border-radius: 12px;
+  color: #fff;
+  font-family: 'Cairo';
+  font-size: 0.85rem;
+  outline: none;
+  margin-bottom: 10px;
+  direction: ltr;
+}
+.cart-wa::placeholder { direction: rtl; color: #444; }
+.cart-checkout-btn {
+  width: 100%;
+  padding: 14px;
+  background: var(--green);
+  border: none;
+  border-radius: 12px;
+  color: #fff;
+  font-family: 'Cairo';
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.empty-cart { text-align: center; padding: 30px; color: #444; font-size: 0.85rem; }
+
+/* ===== TOAST ===== */
+.toast {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%) translateY(80px);
+  background: #1a1a1a;
+  border: 1px solid #2a2a2a;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 50px;
+  font-size: 0.8rem;
+  z-index: 9999;
+  transition: transform 0.3s ease;
+  white-space: nowrap;
+}
+.toast.show { transform: translateX(-50%) translateY(0); }
+
+/* ===== PAYMENT METHODS STYLES ===== */
+.payment-methods-section {
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin-bottom: 16px;
+}
+
+.payment-methods-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 22px;
+  font-weight: 800;
+  color: #ffffff;
+  margin-bottom: 12px;
+  letter-spacing: 2px;
+}
+
+.pm-icon { display: none; }
+
+.payment-methods-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.payment-method-card {
+  background: #1a1a1a;
+  border: 1px solid #2a2a2a;
+  border-radius: 14px;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  box-shadow: none;
+}
+
+.pm-logo { display: none; }
+
+.pm-info {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  text-align: right;
+}
+
+.pm-name {
+  font-size: 13px;
+  font-weight: 500;
+  color: #aaaaaa;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.pm-name::before {
+  content: '📞';
+  font-size: 13px;
+}
+
+.pm-number {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--ps5-color);
+  letter-spacing: 1px;
+  direction: ltr;
+  text-align: right;
+}
+
+.pm-owner {
+  font-size: 11px;
+  color: #555;
+}
+
+.pm-note {
+  background: transparent;
+  border: 1.5px solid #6b5a1a;
+  border-radius: 14px;
+  padding: 14px 16px;
+  color: var(--sec-color);
+  font-size: 13px;
+  text-align: center;
+  margin-top: 4px;
+}
+
+/* ===== SHOPIFY-STYLE PAYMENT RADIO CARDS ===== */
+.pm-radio-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #141414;
+  border: 1px solid #2a2a2a;
+  border-radius: 12px;
+  padding: 14px 16px;
+  cursor: pointer;
+  transition: .2s;
+}
+.pm-radio-card.active {
+  border-color: var(--red);
+  background: #101820;
+}
+.pm-radio-card input[type="radio"] { display: none; }
+.pm-radio-circle {
+  width: 18px; height: 18px;
+  min-width: 18px;
+  border-radius: 50%;
+  border: 2px solid #444;
+  position: relative;
+  transition: .2s;
+}
+.pm-radio-card.active .pm-radio-circle { border-color: var(--red); }
+.pm-radio-card.active .pm-radio-circle::after {
+  content: '';
+  position: absolute;
+  inset: 3px;
+  border-radius: 50%;
+  background: var(--red);
+}
+.pm-radio-name {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #eee;
+}
+.pm-instructions {
+  display: none;
+  background: #0d0d0d;
+  border: 1px solid #1a1a1a;
+  border-top: none;
+  border-radius: 0 0 12px 12px;
+  margin-top: -8px;
+  padding: 14px 16px 16px;
+  font-size: 0.78rem;
+  line-height: 2;
+  color: #bbb;
+}
+.pm-instructions.show { display: block; }
+.pm-instructions b { color: #fff; }
+.pm-instructions .pm-acc-number {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--red-light);
+  direction: ltr;
+  display: inline-block;
+}
+.pm-instructions .pm-soon {
+  text-align: center;
+  color: #666;
+  padding: 6px 0;
+}
+</style>
+</head>
+<body>
+<!-- SPLASH SCREEN -->
+<div id="splash">
+  <div class="splash-title">R3 STORE</div>
+  <div class="splash-sub">Digital Services Store</div>
+  <div class="splash-tag">The Ultimate PS Store</div>
+  <div class="splash-bar"><div class="splash-bar-fill"></div></div>
+</div>
+
+<!-- HEADER -->
+<header>
+  <button class="hamburger-btn" onclick="openDrawer()" title="القائمة">
+    <i class="fas fa-bars"></i>
+  </button>
+  <div class="header-brand">
+    <img src="logo.png" style="height:45px;object-fit:contain;">
+  </div>
+  <div class="search-wrap">
+    <i class="fas fa-search"></i>
+    <input type="text" id="mainSearchInput" placeholder="ابحث عن منتج..." onkeyup="filterVisibleCards()">
+    <button class="search-clear-btn" id="searchClearBtn" onclick="document.getElementById('mainSearchInput').value='';filterVisibleCards();"><i class="fas fa-times"></i></button>
+  </div>
+  <button class="wishlist-btn" id="wishlistBtn" onclick="toggleWishlistView()" title="المفضلة">
+    <i class="fas fa-heart"></i>
+    <span class="wishlist-badge" id="wishlistBadge">0</span>
+  </button>
+  <button class="cart-btn" onclick="openCart()">
+    <i class="fas fa-shopping-cart"></i>
+    Cart
+    <span class="cart-count" id="cartCount">0</span>
+  </button>
+</header>
+
+<!-- TRUST BAR -->
+<div class="trust-bar">
+  <div class="trust-item"><i class="fas fa-shield-halved"></i> ضمان أمان 100%</div>
+  <div class="trust-sep"></div>
+  <div class="trust-item"><i class="fas fa-clock"></i> دعم مباشر 24/7</div>
+  <div class="trust-sep"></div>
+  <div class="trust-item"><i class="fas fa-bolt"></i> تسليم فوري</div>
+</div>
+
+<!-- SIDE DRAWER -->
+<div class="side-drawer-overlay" id="drawerOverlay" onclick="closeDrawer()"></div>
+<div class="side-drawer" id="sideDrawer">
+  <div class="drawer-head">
+    <img src="logo.png">
+    <button class="drawer-close" onclick="closeDrawer()"><i class="fas fa-times"></i></button>
+  </div>
+  <button class="drawer-item" onclick="closeDrawer();window.scrollTo({top:0,behavior:'smooth'});"><span><i class="fas fa-house di-icon"></i> الرئيسية</span></button>
+  <button class="drawer-item" onclick="closeDrawer();goToTab('psn');"><span><i class="fas fa-gamepad di-icon"></i> حسابات الألعاب</span><i class="fas fa-chevron-left di-arrow"></i></button>
+  <button class="drawer-item" onclick="closeDrawer();goToTab('psplus');"><span><i class="fas fa-crown di-icon"></i> الاشتراكات</span><i class="fas fa-chevron-left di-arrow"></i></button>
+  <button class="drawer-item" onclick="closeDrawer();goToTab('daily');"><span><i class="fas fa-fire di-icon"></i> عروض اليوم</span></button>
+  <button class="drawer-item" onclick="closeDrawer();goToTab('rent',true);"><span><i class="fas fa-key di-icon"></i> إيجار الألعاب</span></button>
+  <button class="drawer-item" onclick="closeDrawer();goToTab('predictions',true);"><span><i class="fas fa-trophy di-icon"></i> توقعات المونديال</span></button>
+  <button class="drawer-item" onclick="closeDrawer();openCart();"><span><i class="fas fa-shopping-cart di-icon"></i> السلة</span></button>
+  <div class="drawer-social">
+    <a href="#"><i class="fab fa-facebook-f"></i></a>
+    <a href="#"><i class="fab fa-instagram"></i></a>
+    <a href="#"><i class="fab fa-tiktok"></i></a>
+    <a href="#"><i class="fab fa-whatsapp"></i></a>
+  </div>
+</div>
+
+<!-- HERO CAROUSEL -->
+<div class="hero-carousel" id="heroCarousel">
+  <div class="hero-slide active" style="background-image:url('slide1.png')">
+    <div class="hero-slide-content">
+      <div class="hero-slide-title">GTA VI</div>
+      <div class="hero-slide-sub">متاح للحجز المسبق الآن</div>
+      <button class="hero-slide-btn" onclick="openDetailByKey('psn',0)">اطلب الآن</button>
+    </div>
+  </div>
+  <div class="hero-slide" style="background-image:url('slide2.png')">
+    <div class="hero-slide-content">
+      <div class="hero-slide-title">FC 26</div>
+      <div class="hero-slide-sub">أحدث نسخة من لعبة الكورة الأشهر</div>
+      <button class="hero-slide-btn" onclick="goToTab('psn',true)">تسوق الآن</button>
+    </div>
+  </div>
+  <div class="hero-slide" style="background-image:url('slide3.png')">
+    <div class="hero-slide-content">
+      <div class="hero-slide-title">توقعات المونديال 2026</div>
+      <div class="hero-slide-sub">خمّن النتيجة واكسب جوائز</div>
+      <button class="hero-slide-btn" onclick="goToTab('predictions',true)">شارك دلوقتي</button>
+    </div>
+  </div>
+  <div class="hero-dots" id="heroDots"></div>
+</div>
+
+<!-- CATEGORIES -->
+<div class="categories-section">
+  <div class="big-section-title" style="margin:22px 0 2px;font-size:1.6rem;">الأقسام</div>
+  <div class="categories-grid">
+    <div class="category-card cc-1" onclick="goToTab('psn',true)"><i class="fab fa-playstation"></i><span>PlayStation</span></div>
+    <div class="category-card cc-4" onclick="goToTab('psplus',true)"><i class="fas fa-crown"></i><span>PS Plus</span></div>
+    <div class="category-card cc-2" onclick="goToTab('pcxbox',true)"><i class="fab fa-steam"></i><span>Steam</span></div>
+    <div class="category-card cc-3" onclick="goToTab('pcxbox',true)"><i class="fab fa-xbox"></i><span>Xbox</span></div>
+    <div class="category-card cc-7" onclick="goToTab('rent',true)"><i class="fas fa-users"></i><span>Gameshare</span></div>
+    <div class="category-card cc-6" onclick="goToTab('daily',true)"><i class="fas fa-fire"></i><span>عروض اليوم</span></div>
+    <div class="category-card cc-5" onclick="goToTab('mycustomid',true)"><i class="fas fa-tv"></i><span>خدمات ترفيهية</span></div>
+    <div class="category-card cc-8" onclick="goToTab('predictions',true)"><i class="fas fa-trophy"></i><span>توقعات المونديال</span></div>
+  </div>
+</div>
+
+<!-- RECENTLY VIEWED -->
+<div class="recent-strip" id="recentStrip" style="display:none">
+  <div class="recent-strip-title">👀 اتفرجت عليه قبل كده</div>
+  <div class="recent-strip-items" id="recentStripItems"></div>
+</div>
+
+<div class="big-section-title">الألعاب الأكثر مبيعًا</div>
+<div class="big-section-sub">اختار القسم اللي محتاجه وابدأ التسوق</div>
+
+<!-- TABS -->
+<div class="tabs-scroll">
+  <button class="tab-btn active" onclick="showTab('psn',this)">🎮 PlayStation</button>
+  <button class="tab-btn" onclick="showTab('psplus',this)">➕ PS Plus</button>
+  <button class="tab-btn" onclick="showTab('fortnite',this)">⚡ شحن الالعاب</button>
+  <button class="tab-btn" onclick="showTab('daily',this)">🔥 عروض اليوم</button>
+  <button class="tab-btn" onclick="showTab('mycustomid', this)">  خدمات الترفية📺</button>
+  <button class="tab-btn"   onclick="showTab('pcxbox',this)">🖥️ PC & Xbox</button>
+  <button class="tab-btn" onclick="showTab('gta',this)">🚗 GTA V</button>
+  <button class="tab-btn" onclick="showTab('rent',this)">🔑 إيجار</button>
+  <button class="tab-btn" onclick="showTab('predictions',this)">🏆 توقعات المونديال</button>
+</div>
+
+<!-- PSN GRID -->
+<div id="psn" class="game-grid active"></div>
+
+<!-- PS PLUS GRID -->
+<div id="psplus" class="game-grid"></div>
+
+<!-- FORTNITE GRID -->
+<div id="fortnite" class="game-grid"></div>
+
+<!-- DAILY DEALS GRID -->
+<div class="daily-countdown" id="dailyCountdown">
+  <i class="fas fa-fire"></i> العروض دي بتنتهي بعد
+  <span id="countdownText">00:00:00</span>
+</div>
+<div id="daily" class="game-grid"></div>
+<div id="mycustomid" class="game-grid"></div>
+<!-- GTA GRID -->
+<div id="gta" class="game-grid"></div>
+
+<!-- PC XBOX GRID -->
+<div id="pcxbox" class="game-grid"></div>
+
+<!-- RENT GRID -->
+<div id="rent" class="game-grid"></div>
+<!-- WORLD CUP PREDICTIONS GRID -->
+<div id="predictions" class="game-grid">
+  <div class="predictions-inner">
+
+    <div class="pred-intro">
+      <div class="pred-intro-title">🏆 كأس العالم على أبواب النهاية!</div>
+      <div class="pred-intro-text">باقي ماتشين بس على بطل العالم الجديد. توقع نتيجة أي ماتش وارفع اسكرين شوت للشروط، وهيوصلنا طلبك زي أي طلب تاني 👇</div>
+    </div>
+
+    <!-- MATCH 1: THIRD PLACE -->
+    <div class="prediction-card">
+      <div class="pred-stage">مباراة تحديد المركز الثالث</div>
+      <div class="pred-teams">🇫🇷 فرنسا <span class="pred-vs">×</span> إنجلترا 🏴󠁧󠁢󠁥󠁮󠁧󠁿</div>
+      <div class="pred-date"><i class="fas fa-calendar"></i> السبت 18 يوليو 2026 · ميامي</div>
+      <button class="pred-btn" onclick="openPrediction('مباراة تحديد المركز الثالث: فرنسا × إنجلترا')">توقع دلوقتي</button>
+    </div>
+
+    <!-- MATCH 2: FINAL -->
+    <div class="prediction-card pred-final">
+      <div class="pred-stage">🏆 النهائي</div>
+      <div class="pred-teams">🇪🇸 إسبانيا <span class="pred-vs">×</span> الأرجنتين 🇦🇷</div>
+      <div class="pred-date"><i class="fas fa-calendar"></i> الأحد 19 يوليو 2026 · نيويورك/نيوجيرسي</div>
+      <button class="pred-btn" onclick="openPrediction('النهائي: إسبانيا × الأرجنتين')">توقع دلوقتي</button>
+    </div>
+
+  </div>
+</div>
+<!-- FAQ -->
+<div class="faq-section">
+  <div class="faq-title">أسئلة شائعة</div>
+  <div class="faq-item">
+    <button class="faq-q" onclick="toggleFaq(this)">إزاي أستلم الحساب بعد الدفع؟ <i class="fas fa-chevron-down"></i></button>
+    <div class="faq-a">بعد ما تبعت صورة الدفع، هيتم التواصل معاك على الواتساب في أقرب وقت وتستلم بيانات الحساب أو الكود مباشرة.</div>
+  </div>
+  <div class="faq-item">
+    <button class="faq-q" onclick="toggleFaq(this)">إيه الفرق بين Primary و Secondary؟ <i class="fas fa-chevron-down"></i></button>
+    <div class="faq-a">Primary معناها الحساب بيتفعل كجهاز أساسي على الكونسول بتاعك وتقدر تلعب أوفلاين. Secondary لازم تكون متصل بالنت عشان تلعب.</div>
+  </div>
+  <div class="faq-item">
+    <button class="faq-q" onclick="toggleFaq(this)">فيه ضمان على الحسابات؟ <i class="fas fa-chevron-down"></i></button>
+    <div class="faq-a">أيوه، كل الحسابات بيها ضمان استبدال في حالة أي مشكلة تقنية من جهتنا. تواصل معانا على واتساب في أي وقت.</div>
+  </div>
+  <div class="faq-item">
+    <button class="faq-q" onclick="toggleFaq(this)">إزاي أستخدم كود الخصم؟ <i class="fas fa-chevron-down"></i></button>
+    <div class="faq-a">لما تختار المنتج وتفتح صفحة الطلب، هتلاقي خانة "كود الخصم" — اكتب الكود وادوس تطبيق وهيتحسم من السعر تلقائيًا.</div>
+  </div>
+</div>
+
+<!-- DETAIL PANEL -->
+<div id="detailPanel">
+  <div class="detail-overlay" onclick="closeDetail()"></div>
+  <div class="detail-sheet">
+    <div class="detail-handle"></div>
+    <div class="detail-img-wrap">
+      <img id="det-img" class="detail-img" src="" onerror="this.style.display='none';document.getElementById('det-placeholder').style.display='flex'">
+      <div id="det-placeholder" class="detail-img-placeholder" style="display:none">🎮</div>
+      <div class="detail-img-fade"></div>
+    </div>
+    <div class="detail-body">
+      <div class="detail-title-row">
+        <div class="detail-title" id="det-title">GAME TITLE</div>
+        <button class="detail-share-btn" onclick="shareCurrentProduct()" title="مشاركة"><i class="fas fa-share-nodes"></i></button>
+      </div>
+
+      <div class="detail-rating-row" id="det-rating-row">
+        <span class="det-stars" id="det-stars">★★★★★</span>
+        <span class="det-rating-num" id="det-rating-num">5.0 (7)</span>
+      </div>
+
+      <div class="detail-tags">
+        <span class="detail-tag detail-genre" id="det-genre">ACTION</span>
+      </div>
+      <div class="detail-desc" id="det-desc">وصف اللعبة هنا.</div>
+
+      <div class="detail-section-title">اللغة</div>
+      <div class="lang-pill" id="det-lang">English Menus / EN-AR Voice</div>
+
+      <div class="detail-section-title">نوع الحساب</div>
+      <div class="account-options" id="det-options"></div>
+
+      <div class="detail-price-row" id="det-price-row" style="display:none">
+        <span class="dp-old" id="det-old-price"></span>
+        <span class="dp-current" id="det-current-price"></span>
+        <span class="dp-sale-badge" id="det-sale-badge" style="display:none">Sale</span>
+      </div>
+
+      <div class="detail-note-box" id="det-compat-note">
+        PRIMARY PS5 خاص بكونسول PS5 بس، وPRIMARY PS4 خاص بـ PS4 بس. SECONDARY بتشتغل على PS4 أو PS5.
+      </div>
+
+      <div class="detail-mini-row"><i class="fas fa-bolt"></i> <b>تسليم فوري</b></div>
+      <div class="detail-mini-row"><i class="fas fa-box"></i> حجم اللعبة: <span id="det-size-val">— GB</span></div>
+
+      <div class="detail-section-title">الكمية</div>
+      <div class="qty-stepper">
+        <button onclick="changeDetailQty(-1)">−</button>
+        <span id="det-qty-val">1</span>
+        <button onclick="changeDetailQty(1)">+</button>
+      </div>
+
+      <label class="agree-box">
+        <input type="checkbox" id="det-agree" checked>
+        <span>موافق على <a href="#" onclick="event.preventDefault()">سياسة الاسترجاع وشروط الـ Game Share</a> وإن كل عمليات الشراء نهائية.</span>
+      </label>
+
+      <button class="detail-btn-outline" id="det-cart-btn" onclick="addCurrentToCart()"><i class="fas fa-cart-plus"></i> Add to cart</button>
+      <button class="detail-order-btn" id="det-order-btn" onclick="openOrderFromDetail()">SELECT AN ACCOUNT TYPE</button>
+      <button class="detail-btn-outline" id="det-wishlist-btn" onclick="toggleWishlistFromDetail()"><i class="far fa-heart"></i> Add to wishlist</button>
+      <div class="detail-points-note"><i class="fas fa-coins"></i> <span id="det-points-note">اكسب نقاط مع كل عملية شراء!</span></div>
+
+      <div class="detail-accordion">
+        <button class="detail-accordion-head" onclick="toggleDetailAccordion(this)">
+          <span><i class="fas fa-clipboard-list"></i> Instructions [Important]</span>
+          <i class="fas fa-chevron-down"></i>
+        </button>
+        <div class="detail-accordion-body">
+          <p>⭐⭐ - البرايماري (Primary):</p>
+          <p>• اللعبة أو البلس بتشتغل لكل اليوزرات اللي على الجهاز.<br>• أي حد عنده يوزر على نفس الجهاز يقدر يلعب اللعبة أو يستخدم البلس.<br>• لازم تعرف إن البرايماري بيشتغل على جهاز واحد بس.</p>
+          <p>⭐ - الساكندري (Secondary):</p>
+          <p>• اللعبة أو البلس بتشتغل بس على اليوزر اللي مديهولك بس.<br>• محتاج إنترنت دايمًا عشان اللعبة تشتغل.<br>• بيشتغل على جهاز واحد بس.</p>
+          <p>⭐⭐⭐ - الفل (Full Access):</p>
+          <p>• هنا بقى عندك فول أكسس للأكاونت بالكامل، وتقدر تغيّر الباسورد وتتحكم فيه زي ما تحب.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN HIDDEN TRIGGER: زرار مخفي، مفيش أي شكل ظاهر، مكانه أسفل يسار الشاشة -->
+<button class="admin-trigger" onclick="openAdminGate()" aria-hidden="true"></button>
+
+<!-- BACK TO TOP -->
+<button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="رجوع لأعلى">
+  <i class="fas fa-arrow-up"></i>
+</button>
+
+<!-- WHATSAPP QUICK CONTACT -->
+<a class="wa-float" id="waFloat" href="#" target="_blank" title="تواصل معانا على واتساب">
+  <span class="wa-float-ring"></span>
+  <i class="fab fa-whatsapp"></i>
+</a>
+
+<!-- ADMIN GATE MODAL -->
+<div id="adminGateModal">
+  <div class="order-overlay" onclick="closeAdminGate()"></div>
+  <div class="admin-gate-box">
+    <i class="fas fa-lock"></i>
+    <div class="admin-gate-title">ADMIN ACCESS</div>
+    <input type="password" id="admin-code-input" class="admin-gate-input" placeholder="ادخل الكود" onkeydown="if(event.key==='Enter')submitAdminCode()">
+    <button class="admin-gate-btn" onclick="submitAdminCode()">دخول</button>
+    <button class="admin-gate-cancel" onclick="closeAdminGate()">إلغاء</button>
+  </div>
+</div>
+
+<!-- ORDER MODAL -->
+<div id="orderModal">
+  <div class="order-overlay" onclick="closeOrder()"></div>
+  <div class="order-box">
+    <div class="order-title">COMPLETE ORDER</div>
+    <div class="order-game-name" id="ord-game-name">Game Name</div>
+
+    <form id="netlifyOrderForm"
+          name="r3-order"
+          method="POST"
+          action="/thankyou.html"
+          data-netlify="true"
+          data-netlify-honeypot="bot-field"
+          enctype="multipart/form-data">
+
+      <input type="hidden" name="form-name" value="r3-order">
+      <input type="hidden" name="game" id="ord-hidden-game">
+      <p style="display:none"><input name="bot-field"></p>
+
+      <span class="order-field-label">ACCOUNT TYPE</span>
+      <select class="order-select" name="account_type" id="ord-account-select" onchange="updateOrderTotal()" required></select>
+
+      <span class="order-field-label">DISCOUNT CODE</span>
+      <div class="order-discount-row">
+        <input class="order-discount-input" id="ord-discount" name="discount_code" placeholder="حط كود الخصم هنا بدون مسافات">
+        <button type="button" class="order-apply-btn" onclick="applyDiscount()">Apply</button>
+      </div>
+      <!-- ===== PAYMENT METHODS SECTION (ثابت - عدّل البيانات هنا) ===== -->
+<div class="payment-methods-section">
+  <div class="payment-methods-title">Payment Methods</div>
+
+  <div class="payment-methods-list">
+
+    <!-- InstaPay -->
+    <label class="pm-radio-card active" onclick="selectPM(this,'ord','instapay')">
+      <input type="radio" name="payment_method" value="InstaPay" checked>
+      <span class="pm-radio-circle"></span>
+      <span class="pm-radio-name">InstaPay</span>
+    </label>
+    <div class="pm-instructions show" id="ord-pm-instapay">
+      هتفتح تطبيق <b>InstaPay</b> هتدخل علي <b>Send money</b> او <b>Bank account</b><br>
+      وهتحول علي الرقم ده: <span class="pm-acc-number">01224747215</span><br>
+      الاسم اللي هيظهرلك بعد التحويل هو <b>GEHAD M** E**</b><br>
+      اكتب المبلغ زي الأوردر بالظبط، وبعد ما تحول اعمل <b>Screenshot</b> وارفعه تحت
+    </div>
+
+    <!-- Vodafone Cash -->
+    <label class="pm-radio-card" onclick="selectPM(this,'ord','vodafone')">
+      <input type="radio" name="payment_method" value="Vodafone Cash">
+      <span class="pm-radio-circle"></span>
+      <span class="pm-radio-name">Vodafone Cash</span>
+    </label>
+    <div class="pm-instructions" id="ord-pm-vodafone">
+      <div class="pm-soon">قريباً!</div>
+    </div>
+
+    <!-- Telda -->
+    <label class="pm-radio-card" onclick="selectPM(this,'ord','telda')">
+      <input type="radio" name="payment_method" value="Telda">
+      <span class="pm-radio-circle"></span>
+      <span class="pm-radio-name">Telda</span>
+    </label>
+    <div class="pm-instructions" id="ord-pm-telda">
+      <div class="pm-soon">قريباً!</div>
+    </div>
+
+    <div class="pm-note">Don't forget to take a screenshot of your transfer!
+    ⚠️هيتم استرجاع الفلوس بالكامل في حاله انتهاء كميه المنتج انستاباي فقط⚠️
+    </div>
+  </div>
+</div>
+<!-- ===== END PAYMENT METHODS SECTION ===== -->
+
+      <div class="order-total-row">
+        <span class="order-total-label">Total to Pay</span>
+        <span class="order-total-val" id="ord-total">0 L.E</span>
+      </div>
+      <input type="hidden" name="total" id="ord-hidden-total">
+
+      <span class="order-field-label">YOUR WHATSAPP NUMBER</span>
+      <input class="order-wa-input" id="ord-wa" name="whatsapp" type="tel" placeholder="e.g. 01xxxxxxxxx" dir="ltr" required>
+
+      <span class="order-field-label">TRANSFER SCREENSHOT</span>
+      <div class="order-upload-area" onclick="document.getElementById('uploadFileInput').click()">
+        <div class="order-upload-icon">📷</div>
+        <div class="order-upload-text" id="upload-text">Click to upload payment screenshot</div>
+        <div class="order-upload-sub">JPG, PNG · Max 10MB</div>
+      </div>
+      <input type="file" id="uploadFileInput" name="screenshot" accept="image/*" onchange="handleUpload(this)" required>
+
+      <div class="order-actions">
+        <button type="button" class="order-cancel-btn" onclick="closeOrder()">Cancel</button>
+        <button type="submit" class="order-send-btn" onclick="return prepareAndSendOrder()">
+          SEND ORDER <i class="fas fa-mobile-alt"></i>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- WORLD CUP PREDICTION MODAL -->
+<div id="predictionModal">
+  <div class="order-overlay" onclick="closePrediction()"></div>
+  <div class="order-box">
+    <div class="order-title">توقع النتيجة</div>
+    <div class="order-game-name" id="pred-match-name">Match Name</div>
+
+    <form id="netlifyPredictionForm"
+          name="r3-prediction"
+          method="POST"
+          action="/thankyou.html"
+          data-netlify="true"
+          data-netlify-honeypot="bot-field"
+          enctype="multipart/form-data">
+
+      <input type="hidden" name="form-name" value="r3-prediction">
+      <input type="hidden" name="match" id="pred-hidden-match">
+      <p style="display:none"><input name="bot-field"></p>
+
+      <span class="order-field-label">توقعك للنتيجة</span>
+      <div class="pred-score-row">
+        <div class="pred-score-team">
+          الفريق الأول
+          <input class="pred-score-input" id="pred-score1" name="score_team1" type="number" min="0" max="20" placeholder="0" required>
+        </div>
+        <div class="pred-score-sep">-</div>
+        <div class="pred-score-team">
+          الفريق التاني
+          <input class="pred-score-input" id="pred-score2" name="score_team2" type="number" min="0" max="20" placeholder="0" required>
+        </div>
+      </div>
+
+      <span class="order-field-label">رقم الواتساب</span>
+      <input class="order-wa-input" id="pred-wa" name="whatsapp" type="tel" placeholder="e.g. 01xxxxxxxxx" dir="ltr" required>
+
+      <span class="order-field-label pred-upload-label">اسكرين شوت 1 (الشرط الأول)</span>
+      <div class="order-upload-area" onclick="document.getElementById('predUploadInput1').click()">
+        <div class="order-upload-icon">📷</div>
+        <div class="order-upload-text" id="pred-upload-text-1">اضغط لرفع الصورة الأولى</div>
+        <div class="order-upload-sub">JPG, PNG · Max 10MB</div>
+      </div>
+      <input type="file" id="predUploadInput1" name="screenshot1" accept="image/*" onchange="handlePredUpload(this,1)" required>
+
+      <span class="order-field-label pred-upload-label">اسكرين شوت 2 (الشرط التاني)</span>
+      <div class="order-upload-area" onclick="document.getElementById('predUploadInput2').click()">
+        <div class="order-upload-icon">📷</div>
+        <div class="order-upload-text" id="pred-upload-text-2">اضغط لرفع الصورة التانية</div>
+        <div class="order-upload-sub">JPG, PNG · Max 10MB</div>
+      </div>
+      <input type="file" id="predUploadInput2" name="screenshot2" accept="image/*" onchange="handlePredUpload(this,2)" required>
+
+      <div class="order-actions">
+        <button type="button" class="order-cancel-btn" onclick="closePrediction()">Cancel</button>
+        <button type="submit" class="order-send-btn" onclick="return preparePrediction()">
+          إرسال التوقع <i class="fas fa-mobile-alt"></i>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- CART PANEL -->
+<div id="cartPanel">
+  <div class="cart-overlay" onclick="closeCart()"></div>
+  <div class="cart-sheet">
+    <div class="cart-handle"></div>
+    <div class="cart-title">🛒 السلة</div>
+    <div id="cart-items-list"></div>
+
+    <!-- Cart order form — shows when cart has items -->
+    <div id="cart-order-form" style="display:none">
+      <form id="netlifyCartForm"
+            name="r3-cart-order"
+            method="POST"
+            action="/thankyou.html"
+            data-netlify="true"
+            data-netlify-honeypot="bot-field"
+            enctype="multipart/form-data">
+
+        <input type="hidden" name="form-name" value="r3-cart-order">
+        <input type="hidden" name="cart_items" id="cart-hidden-items">
+        <p style="display:none"><input name="bot-field"></p>
+
+      <span class="order-field-label" style="margin-top:14px">ACCOUNT TYPE</span>
+      <select class="order-select" name="account_type" id="cart-account-type" onchange="updateCartTotal()" required>
+        <option value="">-- اختر نوع الحساب --</option>
+        <option value="PS5 Primary">PS5 Primary</option>
+        <option value="PS4 Primary">PS4 Primary</option>
+        <option value="Secondary">Secondary (SEC)</option>
+        <option value="PC / Digital">PC / Digital</option>
+      </select>
+
+      <span class="order-field-label">DISCOUNT CODE</span>
+      <div class="order-discount-row">
+        <input class="order-discount-input" id="cart-discount" name="discount_code" placeholder="حط الكود هنا صح وبدون مسافات">
+        <button type="button" class="order-apply-btn" onclick="applyCartDiscount()">Apply</button>
+      </div>
+
+      <div class="payment-methods-section">
+        <div class="payment-methods-title">Payment Methods</div>
+        <div class="payment-methods-list">
+          <label class="pm-radio-card active" onclick="selectPM(this,'cart','instapay')">
+            <input type="radio" name="payment_method" value="InstaPay" checked>
+            <span class="pm-radio-circle"></span>
+            <span class="pm-radio-name">InstaPay</span>
+          </label>
+          <div class="pm-instructions show" id="cart-pm-instapay">
+            هتفتح تطبيق <b>InstaPay</b> هتدخل علي <b>Send money</b> او <b>Bank account</b><br>
+            وهتحول علي الرقم ده: <span class="pm-acc-number">01224747215</span><br>
+            الاسم اللي هيظهرلك بعد التحويل هو <b>GEHAD M** E**</b><br>
+            اكتب المبلغ زي الأوردر بالظبط، وبعد ما تحول اعمل <b>Screenshot</b> وارفعه تحت
+          </div>
+
+          <label class="pm-radio-card" onclick="selectPM(this,'cart','vodafone')">
+            <input type="radio" name="payment_method" value="Vodafone Cash">
+            <span class="pm-radio-circle"></span>
+            <span class="pm-radio-name">Vodafone Cash</span>
+          </label>
+          <div class="pm-instructions" id="cart-pm-vodafone"><div class="pm-soon">قريباً!</div></div>
+
+          <label class="pm-radio-card" onclick="selectPM(this,'cart','telda')">
+            <input type="radio" name="payment_method" value="Telda">
+            <span class="pm-radio-circle"></span>
+            <span class="pm-radio-name">Telda</span>
+          </label>
+          <div class="pm-instructions" id="cart-pm-telda"><div class="pm-soon">قريباً!</div></div>
+
+          <div class="pm-note">Don't forget to take a screenshot of your transfer!</div>
+        </div>
+      </div>
+
+      <div class="order-total-row">
+        <span class="order-total-label">Total to Pay</span>
+        <span class="order-total-val" id="cart-total-val">0 L.E</span>
+      </div>
+      <input type="hidden" name="total" id="cart-hidden-total">
+
+      <span class="order-field-label">YOUR WHATSAPP NUMBER</span>
+      <input class="cart-wa" id="cart-wa" name="whatsapp" type="tel" placeholder="e.g. 01xxxxxxxxx" dir="ltr" required>
+
+      <span class="order-field-label" style="margin-top:8px">TRANSFER SCREENSHOT</span>
+      <div class="order-upload-area" onclick="document.getElementById('cartUploadInput').click()">
+        <div class="order-upload-icon">📸</div>
+        <div class="order-upload-text" id="cart-upload-text">Click to upload payment screenshot</div>
+        <div class="order-upload-sub">JPG, PNG · Max 10MB</div>
+      </div>
+      <input type="file" id="cartUploadInput" name="screenshot" accept="image/*" onchange="handleCartUpload(this)" style="display:none" required>
+
+      <div class="order-actions" style="margin-top:4px">
+        <button type="button" class="order-cancel-btn" onclick="closeCart()">Cancel</button>
+        <button type="submit" class="order-send-btn" onclick="return prepareAndSendCart()">
+          SEND ORDER <i class="fas fa-mobile-alt"></i>
+        </button>
+      </div>
+      </form>
+    </div>
+
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+    
+// ============================================================
+//   ✏️  منطقة التعديل — كل المنتجات هنا بس
+// ============================================================
+
+// ── PlayStation (PSN) ── أسعار 3 أجهزة: PS5 / PS4 / SEC
+const psnProducts = [
+  {
+    name: "Grand Theft Auto VI (GTA VI) Standard Edition",
+    genre: "ACTION",
+    size: "- GB",
+    desc: "لعبة عالم مفتوح مليئة بالإثارة والمغامرات.",
+    icon: "🎮",
+    img: "693.png",
+    stock: "NEW!! Stock",
+    ps5:  2325,
+    ps4:  null,
+    sec:  1535
+  },
+  {
+    name: "Grand Theft Auto VI (GTA VI) Ultimate Edition",
+    genre: "ACTION",
+    size: "- GB",
+    desc: "لعبة عالم مفتوح مليئة بالإثارة والمغامرات.",
+    icon: "🎮",
+    img: "693.png",
+    stock: "NEW!! Stock",
+    ps5:  2665,
+    ps4:  null,
+    sec:  2345
+  },
+   {
+    name: "Call Of Duty Black Ops 2",
+    genre: "ACTION",
+    size: "- GB",
+    desc: "لعبة اكشن جديده مليئة بالإثارة والمغامرات.",
+    icon: "🎮",
+    img: "613.png",
+    stock: "NEW!! Stock",
+    ps5:  935,
+    ps4:  815,
+    sec:  715
+  },
+  {
+    name: "FC 26",          // اسم المنتج
+    genre: "SPORTS",        // نوع اللعبة
+    size: "- GB",          // الحجم
+    desc: "لعبة كرة القدم الأشهر في العالم، تجربة لا مثيل لها",
+    icon: "⚽",             // أيقونة لو مفيش صورة
+    img: "fc26.png",        // اسم الصورة (فارغ لو مفيش)
+    stock: "Low Stock",     // In Stock / Low Stock / Out of Stock
+    ps5:  630,              // سعر PS5 Primary — اكتب null لو مش موجود
+    ps4:  410,              // سعر PS4 Primary
+    sec:  380               // سعر Secondary
+  },
+   {
+    name: "It Takes Two",
+    genre: "CO-OP",
+    size: "- GB",
+    desc: "مغامرة تعاونية ممتعة جدًا تعتمد على التعاون وحل الألغاز بطريقة مبتكرة.",
+    icon: "🎮",
+    img: "58.png",
+    stock: "In Stock",
+    ps5:  520,
+    ps4:  null,
+    sec:  370
+  },
+   {
+    name: "Hogwarts Legacy",
+    genre: "ADVENTURE",
+    size: "- GB",
+    desc: "عيش كطالب سحر في عالم هاري بوتر مع تعاويذ واستكشاف ومدرسة هوجورتس الضخمة.",
+    icon: "🎮",
+    img: "56.png",
+    stock: "In Stock",
+    ps5:  null,
+    ps4:  495,
+    sec:  420
+  },
+  {
+    name: "Battlefield 1",
+    genre: "ACTION",
+    size: "- GB",
+    desc: "حرب عالمية أولى بجرافيك قوي ومعارك أونلاين ضخمة وواقعية جدًا.",
+    icon: "🎮",
+    img: "batt.png",
+    stock: "Low Stock",
+    ps5:  null,
+    ps4:  null,
+    sec:  190,
+  },
+  {
+    name: "Uncharted Collection",
+    genre: "ADVENTURE",
+    size: "- GB",
+    desc: "مغامرات سينمائية مليانة كنوز وأكشن واستكشاف مع نيثان دريك.",
+    icon: "🎮",
+    img: "54.png",
+    stock: "In Stock",
+    ps5:  445,
+    ps4:  420,
+    sec:  370
+  },
+  {
+    name: "A Way Out",
+    genre: "CO-OP",
+    size: "- GB",
+    desc: "لعبة تعاونية ممتعة عن اتنين بيهربوا من السجن وسط أحداث وقصة سينمائية قوية.",
+    icon: "🎮",
+    img: "awayout.png",
+    stock: "Low Stock",
+    ps5:  395,
+    ps4:  395,
+    sec:  345,
+  },
+  {
+    name: "Gang Beasts",
+    genre: "ACTION",
+    size: "- GB",
+    desc: "لعبة قتالات كوميدية بفيزياء مضحكة تقدر تلعبها مع صحابك وتعمل فوضى جامدة.",
+    icon: "🎮",
+    img: "23.png",
+    stock: "In Stock",
+    ps5:  420,
+    ps4:  null,
+    sec:  320,
+  },
+  {
+    name: "Spider Man Miles Morales",
+    genre: "ACTION",
+    size: "- GB",
+    desc: "عيش مغامرة مايلز موراليس بقوى جديدة وقتالات سريعة وجرافيك خرافي في نيويورك.",
+    icon: "🎮",
+    img: "24.png",
+    stock: "In Stock",
+    ps5:  495,
+    ps4:  445,
+    sec:  370,
+  },
+  {
+    name: "Spider Man GOTY",
+    genre: "ACTION",
+    size: "- GB",
+    desc: "مغامرة سبايدرمان الكاملة مع جميع الإضافات وقصة قوية وقتالات ممتعة جدًا.",
+    icon: "🎮",
+    img: "25.png",
+    stock: "In Stock",
+    ps5:  345,
+    ps4:  445,
+    sec:  370,
+  },
+  {
+    name: "God Of War 2018",
+    genre: "ACTION",
+    size: "- GB",
+    desc: "قصة قوية عن كريتوس وابنه في عالم نورس مليان قتال ومغامرات وجرافيك أسطوري.",
+    icon: "🎮",
+    img: "26.png",
+    stock: "In Stock",
+    ps5:  570,
+    ps4:  520,
+    sec:  445,
+  },
+  {
+    name: "God Of War Ragnarok",
+    genre: "ACTION",
+    size: "- GB",
+    desc: "تكملة ملحمية لأحداث كريتوس وأتريوس مع قتال أقوى وعالم نورس أضخم وقصة عاطفية ومليانة أحداث.",
+    icon: "🎮",
+    img: "27.png",
+    stock: "In Stock",
+    ps5:  895,
+    ps4:  720,
+    sec:  645,
+  },
+  {
+    name: "Spider Man 2 Arabic Edition🇸🇦",
+    genre: "ACTION",
+    size: "- GB",
+    desc: "مغامرة ضخمة فيها بيتر ومايلز مع قتال أقوى وتنقّل أسرع في نيويورك وقصة مليانة أحداث.",
+    icon: "🎮",
+    img: "28.png",
+    stock: "In Stock",
+    ps5:  1345,
+    ps4:  null,
+    sec:  995,
+  },
+  {
+    name: "God Of War 3 Remstared",
+    genre: "ACTION",
+    size: "- GB",
+    desc: "نسخة محسّنة من قتال كريتوس في اليونان ضد الآلهة بجرافيك أفضل وأكشن سريع ودموي.",
+    icon: "🎮",
+    img: "29.png",
+    stock: "Low Stock",
+    ps5:  null,
+    ps4:  445,
+    sec:  395,
+  },
+  {
+    name: "Detroit Become A Human Arabic Edition🇸🇦",
+    genre: "ACTION",
+    size: "- GB",
+    desc: "لعبة قصة تفاعلية عن روبوتات بتاخد قراراتك فيها بتغير الأحداث والنهايات بالكامل.",
+    icon: "🎮",
+    img: "30.png",
+    stock: "In Stock",
+    ps5:  620,
+    ps4:  595,
+    sec:  495,
+  },
+  {
+    name: "Crash Bandicoot Bundle - N. Sane Trilogy + CTR Nitro-Fueled",
+    genre: "ACTION",
+    size: "- GB",
+    desc: "باكدج ممتع يجمع مغامرات كراش الكلاسيكية مع سباقات CTR بجرافيك مطور وأجواء حماسية.",
+    icon: "🎮",
+    img: "31.png",
+    stock: "In Stock",
+    ps5:  495,
+    ps4:  395,
+    sec:  345,
+  },
+  {
+    name: "Grand Theft Auto V(PS4 Version)",
+    genre: "ACTION",
+    size: "- GB",
+    desc: "عالم مفتوح ضخم مليان مهمات وأكشن وحرية لعب مع أونلاين ممتع جدًا.",
+    icon: "🎮",
+    img: "32.png",
+    stock: "Low Stock",
+    ps5:  525,
+    ps4:  475,
+    sec:  350,
+  },
+   {
+    name: "Grand Theft Auto V(PS4&5 Version)",
+    genre: "ACTION",
+    size: "- GB",
+    desc: "عالم مفتوح ضخم مليان مهمات وأكشن وحرية لعب مع أونلاين ممتع جدًا.",
+    icon: "🎮",
+    img: "32.png",
+    stock: "Low Stock",
+    ps5:  770,
+    ps4:  495,
+    sec:  395,
+  },
+   {
+    name: "Grand Theft Auto V(PS5 Version)",
+    genre: "ACTION",
+    size: "- GB",
+    desc: "عالم مفتوح ضخم مليان مهمات وأكشن وحرية لعب مع أونلاين ممتع جدًا.",
+    icon: "🎮",
+    img: "33.png",
+    stock: "Out of Stock",
+    ps5:  null,
+    ps4:  null,
+    sec:  null,
+  },
+  {
+    name: "Alan Wake 2",
+    genre: "HORROR",
+    size: "- GB",
+    desc: "لعبة رعب نفسي وقصة غامضة بجرافيك سينمائي وأجواء مرعبة ومتوترة جدًا.",
+    icon: "🎮",
+    img: "34.png",
+    stock: "In Stock",
+    ps5:  720,
+    ps4:  null,
+    sec:  520,
+  },
+  {
+    name: "Assassins Creed Origins Gold Edition",
+    genre: "ADVENTURE",
+    size: "- GB",
+    desc: "استكشف مصر القديمة مع قصة بايك وكل إضافات اللعبة في عالم مفتوح ضخم ومليان مغامرات.",
+    icon: "🎮",
+    img: "35.png",
+    stock: "In Stock",
+    ps5:  370,
+    ps4:  370,
+    sec:  320,
+  },
+  {
+    name: "Assassin Creed Mirage ARABIC EDITION 🇸🇦",
+    genre: "ADVENTURE",
+    size: "- GB",
+    desc: "ارجع لأسلوب الاغتيالات الكلاسيكي في بغداد بقصة ممتعة وترجمة عربية.",
+    icon: "🎮",
+    img: "36.png",
+    stock: "In Stock",
+    ps5:  645,
+    ps4:  470,
+    sec:  445,
+  },
+  {
+    name: "Assassin's Creed Odyssey",
+    genre: "ADVENTURE",
+    size: "- GB",
+    desc: "مغامرة ضخمة في اليونان القديمة بعالم مفتوح واسع ومعارك واختيارات تغيّر القصة.",
+    icon: "🎮",
+    img: "37.png",
+    stock: "In Stock",
+    ps5:  395,
+    ps4:  370,
+    sec:  320,
+  },
+  {
+    name: "Red Dead Redemption 2",
+    genre: "ACTION",
+    size: "- GB",
+    desc: "واحدة من أقوى ألعاب العالم المفتوح بقصة عظيمة وتفاصيل واقعية وأجواء الغرب الأمريكي.",
+    icon: "🎮",
+    img: "38.png",
+    stock: "In Stock",
+    ps5:  695,
+    ps4:  495,
+    sec:  470,
+  },
+   {
+    name: "Mafia Triolgy",
+    genre: "ACTION",
+    size: "- GB",
+    desc: "مجموعة تضم الثلاثية الكاملة بعصابات وقصص جريمة وأجواء مافيا سينمائية ممتعة..",
+    icon: "🎮",
+    img: "39.png",
+    stock: "In Stock",
+    ps5:  395,
+    ps4:  395,
+    sec:  345,
+  },
+   {
+    name: "Last Of Us Remstared",
+    genre: "ACTION",
+    size: "- GB",
+    desc: "رحلة مؤثرة مليانة بقاء وقتال بين جويل وإيلي في عالم مدمر بالمصابين.",
+    icon: "🎮",
+    img: "40.png",
+    stock: "In Stock",
+    ps5:  395,
+    ps4:  395,
+    sec:  345,
+  },
+  {
+    name: "Resdint Evil 2&3",
+    genre: "HORROR",
+    size: "- GB",
+    desc: "باكدج رعب وبقاء مليان مطاردات وزومبي وأكشن بأجواء مرعبة وجرافيك قوي.",
+    icon: "🎮",
+    img: "41.png",
+    stock: "In Stock",
+    ps5:  645,
+    ps4:  545,
+    sec:  445
+  },
+  {
+    name: "Resdint Evil 4 Gold Edition",
+    genre: "HORROR",
+    size: "- GB",
+    desc: "نسخة كاملة من ريزدنت إيفل 4 مع الإضافات، أكشن ورعب وقصة قوية بجرافيك ممتاز.",
+    icon: "🎮",
+    img: "42.png",
+    stock: "In Stock",
+    ps5:  745,
+    ps4:  645,
+    sec:  545
+  },
+  {
+    name: "Resdint Evil 4 Remake Triolgy",
+    genre: "HORROR",
+    size: "- GB",
+    desc: "تجميعة رعب وأكشن تضم ريميكات قوية بقصص مرعبة وجرافيك حديث وقتالات حماسية.",
+    icon: "🎮",
+    img: "43.png",
+    stock: "In Stock",
+    ps5:  995,
+    ps4:  795,
+    sec:  720
+  },
+  {
+    name: "Resdint Evil 4",
+    genre: "HORROR",
+    size: "- GB",
+    desc: "لعبة رعب وأكشن قوية بتحارب فيها كائنات مرعبة وتنقذ آشلي وسط أجواء متوترة.",
+    icon: "🎮",
+    img: "44.png",
+    stock: "In Stock",
+    ps5:  null,
+    ps4:  553,
+    sec:  null
+  },
+  {
+    name: "Minecraft",
+    genre: "ADVENTURE",
+    size: "- GB",
+    desc: "ابني واستكشف عالم مفتوح بلا حدود تقدر تعيش فيه مغامرات أو تبدع براحتك.",
+    icon: "🎮",
+    img: "45.png",
+    stock: "In Stock",
+    ps5:  745,
+    ps4:  495,
+    sec:  395
+  },
+  {
+    name: "Elden Ring",
+    genre: "ACTION",
+    size: "- GB",
+    desc: "عالم مفتوح ضخم مليان زعماء صعبين واستكشاف وأجواء فانتازي أسطورية.",
+    icon: "🎮",
+    img: "46.png",
+    stock: "In Stock",
+    ps5:  895,
+    ps4:  745,
+    sec:  695
+  },
+  {
+    name: "Forza Horizon 5",
+    genre: "RACE",
+    size: "- GB",
+    desc: "لعبة سباقات عالم مفتوح بجرافيك خرافي وعربيات كتير وأجواء المكسيك الممتعة.",
+    icon: "🎮",
+    img: "47.png",
+    stock: "In Stock",
+    ps5:  1295,
+    ps4:  null,
+    sec:  845
+  },
+  {
+    name: "NBA 2K26",
+    genre: "SPORTS",
+    size: "- GB",
+    desc: "أحدث تجربة كرة سلة بجرافيك واقعي وحركات لاعبين مطورة وأونلاين قوي.",
+    icon: "🎮",
+    img: "48.png",
+    stock: "In Stock",
+    ps5:  795,
+    ps4:  545,
+    sec:  495
+  },
+  {
+    name: "Sekiro: Shadows Die Twice",
+    genre: "ACTION",
+    size: "- GB",
+    desc: "لعبة ساموراي صعبة وسريعة بقتالات احترافية وزعماء تحدّي جامدين جدًا.",
+    icon: "🎮",
+    img: "49.png",
+    stock: "In Stock",
+    ps5:  495,
+    ps4:  495,
+    sec:  395
+  },
+  {
+    name: "Tekken 7",
+    genre: "ACTION",
+    size: "- GB",
+    desc: "لعبة قتال ممتعة تضم شخصيات كتير وكومبوهات قوية وأونلاين تنافسي.",
+    icon: "🎮",
+    img: "50.png",
+    stock: "In Stock",
+    ps5:  445,
+    ps4:  420,
+    sec:  370
+  },
+  {
+    name: "Tomb Raider Definitive Survivor Trilogy",
+    genre: "ACTION",
+    size: "- GB",
+    desc: "تجميعة مغامرات لارا كروفت الكاملة بعالم ضخم وأكشن واستكشاف قوي.",
+    icon: "🎮",
+    img: "51.png",
+    stock: "In Stock",
+    ps5:  445,
+    ps4:  395,
+    sec:  370
+  },
+  {
+    name: "Batman Collection",
+    genre: "ACTION",
+    size: "- GB",
+    desc: "مجموعة ألعاب باتمان بأجواء مظلمة وقتال ممتع وقصص قوية جدًا.",
+    icon: "🎮",
+    img: "52.png",
+    stock: "In Stock",
+    ps5:  420,
+    ps4:  395,
+    sec:  370
+  },
+  {
+    name: "Limbo",
+    genre: "ADVENTURE",
+    size: "- GB",
+    desc: "لعبة ألغاز ومنصات بأجواء غامضة ومرعبة بأسلوب فني مميز جدًا.",
+    icon: "🎮",
+    img: "53.png",
+    stock: "In Stock",
+    ps5:  285,
+    ps4:  285,
+    sec:  245
+  },
+  {
+    name: "FC24",
+    genre: "SPORTS",
+    size: "- GB",
+    desc: "تجربة كرة قدم واقعية مع فرق وحركات اللاعبين الحديثة وأوضاع لعب متنوعة.",
+    icon: "🎮",
+    img: "fc24.png",
+    stock: "Out of Stock",
+    ps5:  null,
+    ps4:  null,
+    sec:  null,
+  },
+  {
+    name: "Sniper Elite 3",
+    genre: "ACTION",
+    size: "- GB",
+    desc: "لعبة قنص وتخفي في الحرب العالمية الثانية بقتل تكتيكي وخرائط واسعة.",
+    icon: "🎮",
+    img: "55.png",
+    stock: "In Stock",
+    ps5:  395,
+    ps4:  370,
+    sec:  345
+  },
+ {
+    name: "Out Last Triniy",
+    genre: "HORROR",
+    size: "- GB",
+    desc: "باكدج رعب مرعب جدًا من منظور أول يضم Outlast + Whistleblower + Outlast 2 بتجربة نفسية تقيلة.",
+    icon: "🏎️",
+    img: "outlast.png",
+    stock: "Out of Stock",
+    ps5:  null,
+    ps4:  null,
+    sec:  null,
+  },
+  {
+    name: "Split Fiction",
+    genre: "CO-OP",
+    size: "- GB",
+    desc: "لعبة تعاونية مليانة أفكار خيالية ومراحل متنوعة بأسلوب ممتع وسريع.",
+    icon: "🎮",
+    img: "57.png",
+    stock: "In Stock",
+    ps5:  1345,
+    ps4:  null,
+    sec:  945
+  },
+  {
+    name: "Need For Speed Payback",
+    genre: "RACE",
+    size: "- GB",
+    desc: "لعبة سباق أكشن فيها مطاردات بوليس وتعديل عربيات وقصة انتقام قوية",
+    icon: "🏎️",
+    img: "nfs.png",
+    stock: "Out of Stock",
+    ps5:  null,
+    ps4:  null,
+    sec:  null
+  },
+  {
+    name: "The Crew Motorfest Arabic🇸🇦",
+    genre: "RACE",
+    size: "- GB",
+    desc: "سباقات عالم مفتوح بعربيات متنوعة وأجواء حماسية مستوحاة من هاواي.",
+    icon: "🎮",
+    img: "59.png",
+    stock: "In Stock",
+    ps5:  595,
+    ps4:  495,
+    sec:  445
+  },
+   {
+    name: "The Last of Us Part II",
+    genre: "ADVENTURE",
+    size: "- GB",
+    desc: "قصة قوية وعاطفية بأكشن وبقاء وجرافيك من أفضل ألعاب البلايستيشن.",
+    icon: "🎮",
+    img: "60.png",
+    stock: "In Stock",
+    ps5:  1020,
+    ps4:  645,
+    sec:  695
+  },
+  {
+    name: "Ghost of Tsushima Director’s Cut",
+    genre: "ACTION",
+    size: "- GB",
+    desc: "مغامرة ساموراي بعالم مفتوح خرافي وقتالات سيف سينمائية وقصة قوية.",
+    icon: "🎮",
+    img: "61.png",
+    stock: "In Stock",
+    ps5:  645,
+    ps4:  545,
+    sec:  470
+  },
+  {
+    name: "Call of Duty: Black Ops III",
+    genre: "ACTION",
+    size: "- GB",
+    desc: "شوتر سريع بأونلاين وزومبي ممتع ومستقبل قتالي متطور.",
+    icon: "🎮",
+    img: "62.png",
+    stock: "In Stock",
+    ps5:  720,
+    ps4:  470,
+    sec:  445
+  },
+  {
+    name: "Crash + Spyro Triple Play Bundle",
+    genre: "CO-OP",
+    size: "- GB",
+    desc: "باكدج ممتع يجمع ألعاب كراش وسبايرو الكلاسيكية بجرافيك مطور.",
+    icon: "🎮",
+    img: "63.png",
+    stock: "In Stock",
+    ps5:  545,
+    ps4:  445,
+    sec:  395
+  },
+  {
+    name: "Call of Duty: WWII Gold Edition",
+    genre: "ACTION",
+    size: "- GB",
+    desc: "حرب عالمية ثانية بأجواء واقعية وقصة قوية مع إضافات النسخة الذهبية.",
+    icon: "🎮",
+    img: "64.png",
+    stock: "In Stock",
+    ps5:  395,
+    ps4:  395,
+    sec:  345
+  },
+  {
+    name: "Cyberpunk 2077 Ultimate Edition",
+    genre: "ACTION",
+    size: "- GB",
+    desc: "عالم مستقبلي ضخم بجرافيك قوي وقصة مليانة أكشن وتطوير شخصيات.",
+    icon: "🎮",
+    img: "65.png",
+    stock: "In Stock",
+    ps5:  945,
+    ps4:  545,
+    sec:  595
+  },
+  {
+    name: "Watch Dogs 2",
+    genre: "ADVENTURE",
+    size: "- GB",
+    desc: "اخترق الأنظمة وتحكم بالتكنولوجيا في عالم مفتوح مليان مهمات وأكشن.",
+    icon: "🎮",
+    img: "66.png",
+    stock: "In Stock",
+    ps5:  395,
+    ps4:  395,
+    sec:  345
+  },
+  {
+    name: "Call of Duty: Modern Warfare III",
+    genre: "ACTION",
+    size: "- GB",
+    desc: "شوتر حديث بأونلاين سريع وطور زومبي ومراحل أكشن قوية.",
+    icon: "🎮",
+    img: "67.png",
+    stock: "In Stock",
+    ps5:  1045,
+    ps4:  745,
+    sec:  695
+  },
+  {
+    name: "Call of Duty: Modern Warfare Remastered",
+    genre: "ACTION",
+    size: "- GB",
+    desc: "نسخة محسنة من واحدة من أشهر أجزاء كود بجرافيك مطور وأجواء كلاسيكية.",
+    icon: "🎮",
+    img: "68.png",
+    stock: "In Stock",
+    ps5:  453,
+    ps4:  420,
+    sec:  370
+  },
+  {
+    name: "Call of Duty: Black Ops 7",
+    genre: "ACTION",
+    size: "- GB",
+    desc: "الجزء لسه جديد ومعلومات المساحة النهائية غير مؤكدة بالكامل.",
+    icon: "🎮",
+    img: "69.png",
+    stock: "In Stock",
+    ps5:  1545,
+    ps4:  570,
+    sec:  null
+  },
+  {
+    name: "Call of Duty: Modern Warfare 2 Campaign Remastered",
+    genre: "ACTION",
+    size: "- GB",
+    desc: "إعادة تحسين لقصة MW2 الكلاسيكية بجرافيك أقوى ومهمات أيقونية.",
+    icon: "🎮",
+    img: "70.png",
+    stock: "In Stock",
+    ps5:  395,
+    ps4:  null,
+    sec:  345
+  },
+  {
+    name: "Call of Duty: Black Ops Cold War",
+    genre: "ACTION",
+    size: "- GB",
+    desc: "حرب وتجسس في فترة الحرب الباردة مع زومبي وأونلاين ممتاز.",
+    icon: "🎮",
+    img: "71.png",
+    stock: "In Stock",
+    ps5:  745,
+    ps4:  645,
+    sec:  545
+  },
+  {
+    name: "Call of Duty: Vanguard Cross-Gen",
+    genre: "ACTION",
+    size: "- GB",
+    desc: "شوتر حرب عالمية بأطوار أونلاين وزومبي وقتال سريع.",
+    icon: "🎮",
+    img: "72.png",
+    stock: "In Stock",
+    ps5:  545,
+    ps4:  470,
+    sec:  420
+  },
+  {
+    name: "Call of Duty: Black Ops 6",
+    genre: "ACTION",
+    size: "- GB",
+    desc: "جزء حديث بأكشن قوي وزومبي وأسلوب لعب سريع ومتطور.",
+    icon: "🎮",
+    img: "73.png",
+    stock: "In Stock",
+    ps5:  1145,
+    ps4:  575,
+    sec:  null
+  },
+  {
+    name: "Call of Duty: Black Ops 4",
+    genre: "ACTION",
+    size: "- GB",
+    desc: "تركّز على الأونلاين والزومبي وطور الباتل رويال Blackout.",
+    icon: "🎮",
+    img: "74.png",
+    stock: "In Stock",
+    ps5:  null,
+    ps4:  395,
+    sec:  null
+  },
+  {
+    name: "Call of Duty: Modern Warfare (2019)",
+    genre: "ACTION",
+    size: "- GB",
+    desc: "واحد من أقوى أجزاء كود الحديثة بجرافيك واقعي وأونلاين ممتاز.",
+    icon: "🎮",
+    img: "75.png",
+    stock: "In Stock",
+    ps5:  null,
+    ps4:  595,
+    sec:  null
+  },
+   {
+    name: "Rayman Legends",
+    genre: "ADVENTURE",
+    size: "- GB",
+    desc: "لعبة منصات ممتعة وسريعة برسومات كرتونية ومراحل متنوعة جدًا.",
+    icon: "🎮",
+    img: "76.png",
+    stock: "In Stock",
+    ps5:  395,
+    ps4:  395,
+    sec:  345
+  }, {
+    name: "Dark Souls III",
+    genre: "SOLOS",
+    size: "- GB",
+    desc: "لعبة RPG صعبة بتحديات قوية وزعماء مرعبين وأجواء مظلمة.",
+    icon: "🎮",
+    img: "77.png",
+    stock: "In Stock",
+    ps5:  695,
+    ps4:  695,
+    sec:  545
+  },
+   {
+    name: "inFAMOUS Second Son",
+    genre: "ACTION",
+    size: "- GB",
+    desc: "مغامرة أكشن بعالم مفتوح وقدرات خارقة وقتالات ممتعة.",
+    icon: "🎮",
+    img: "78.png",
+    stock: "In Stock",
+    ps5:  445,
+    ps4:  420,
+    sec:  345
+  },
+   {
+    name: "Returnal",
+    genre: "ACTION",
+    size: "- GB",
+    desc: "شوتر خيال علمي سريع بأجواء غامضة وتحديات متغيرة كل مرة.",
+    icon: "🎮",
+    img: "79.png",
+    stock: "In Stock",
+    ps5:  745,
+    ps4:  null,
+    sec:  545
+  },
+   {
+    name: "Stray",
+    genre: "ADVENTURE",
+    size: "- GB",
+    desc: "عيش كمجرد قطة في عالم سايبربانك مليان ألغاز واستكشاف.",
+    icon: "🎮",
+    img: "80.png",
+    stock: "In Stock",
+    ps5:  620,
+    ps4:  520,
+    sec:  420
+  },
+   {
+    name: "Gran Turismo 7",
+    genre: "RACE",
+    size: "- GB",
+    desc: "محاكاة سباقات واقعية جدًا بعربيات كتير وتجربة قيادة احترافية.",
+    icon: "🎮",
+    img: "81.png",
+    stock: "In Stock",
+    ps5:  null,
+    ps4:  695,
+    sec:  595
+  },
+   {
+    name: "PES 2019",
+    genre: "SPORTS",
+    size: "- GB",
+    desc: "لعبة كرة قدم بجيم بلاي ممتع وتحكم واقعي لعشاق الكورة.",
+    icon: "🎮",
+    img: "82.png",
+    stock: "In Stock",
+    ps5:  1795,
+    ps4:  1695,
+    sec:  null
+  },
+   {
+    name: "Poppy Playtime Chapter 1",
+    genre: "HORROR",
+    size: "- GB",
+    desc: "لعبة رعب وألغاز داخل مصنع ألعاب مهجور بأجواء مخيفة.",
+    icon: "🎮",
+    img: "83.png",
+    stock: "In Stock",
+    ps5:  345,
+    ps4:  345,
+    sec:  295
+  },
+  {
+    name: "Astro Bot",
+    genre: "ADVENTURE",
+    size: "- GB",
+    desc: "مغامرة منصات ممتعة ومليانة أفكار إبداعية تستغل قدرات يد البلايستيشن بشكل رائع.",
+    icon: "🎮",
+    img: "84.png",
+    stock: "In Stock",
+    ps5:  1495,
+    ps4:  null,
+    sec:  995
+  },
+  {
+    name: "CupHead",
+    genre: "ADVENTURE & CO-OP",
+    size: "- GB",
+    desc: "لعبة صعبة برسوم كرتونية كلاسيكية وقتالات زعماء سريعة جدًا.",
+    icon: "🎮",
+    img: "85.png",
+    stock: "In Stock",
+    ps5:  520,
+    ps4:  470,
+    sec:  420
+  },
+  {
+    name: "ARC Raiders",
+    genre: "ACTION",
+    size: "- GB",
+    desc: "شوتر تعاوني ضد آلات ضخمة في عالم خيال علمي مليان أكشن.",
+    icon: "🎮",
+    img: "86.png",
+    stock: "In Stock",
+    ps5:  1145,
+    ps4:  null,
+    sec:  745
+  },
+  {
+    name: "Cuphead: The Delicious Last Course",
+    genre: "ADVENTURE & CO-OP",
+    size: "- GB",
+    desc: "إضافة جديدة لـ Cuphead فيها زعماء ومراحل وشخصية جديدة ممتعة.",
+    icon: "🎮",
+    img: "87.png",
+    stock: "In Stock",
+    ps5:  595,
+    ps4:  545,
+    sec:  null
+  },
+  {
+    name: "Sleeping Dogs",
+    genre: "ACTION",
+    size: "- GB",
+    desc: "عالم مفتوح بعصابات هونج كونج وقتالات قوية وقصة بوليس متخفي.",
+    icon: "🎮",
+    img: "88.png",
+    stock: "In Stock",
+    ps5:  445,
+    ps4:  null,
+    sec:  370
+  },
+  {
+    name: "Ghost of Yōtei",
+    genre: "ADVENTURE",
+    size: "- GB",
+    desc: "مغامرة ساموراي جديدة بعالم ثلجي وقتالات سينمائية مستوحاة من Ghost of Tsushima.",
+    icon: "🎮",
+    img: "89.png",
+    stock: "In Stock",
+    ps5:  2045,
+    ps4:  null,
+    sec:  1495
+  },
+  {
+    name: "Pragmata",
+    genre: "ADVENTURE",
+    size: "- GB",
+    desc: "لعبة خيال علمي غامضة من كابكوم بأجواء مستقبلية وقصة غريبة.",
+    icon: "🎮",
+    img: "90.png",
+    stock: "In Stock",
+    ps5:  null,
+    ps4:  null,
+    sec:  1295
+  },
+  {
+    name: "Silent Hill 2",
+    genre: "HORROR",
+    size: "- GB",
+    desc: "رعب نفسي قوي بأجواء مرعبة وقصة تعتبر من الأفضل بتاريخ ألعاب الرعب.",
+    icon: "🎮",
+    img: "91.png",
+    stock: "In Stock",
+    ps5:  1170,
+    ps4:  null,
+    sec:  850
+  },
+  {
+    name: "007 First Light",
+    genre: "SPY",
+    size: "- GB",
+    desc: "لعبة جيمس بوند جديدة تركز على التجسس والأكشن السينمائي",
+    icon: "🎮",
+    img: "92.png",
+    stock: "In Stock",
+    ps5:  1895,
+    ps4:  null,
+    sec:  null
+  },
+  {
+    name: "F1 25",
+    genre: "RACE",
+    size: "- GB",
+    desc: "محاكاة فورمولا 1 واقعية جدًا بسيارات ومواسم وسباقات حديثة.",
+    icon: "🎮",
+    img: "93.png",
+    stock: "In Stock",
+    ps5:  1045,
+    ps4:  null,
+    sec:  745
+  },
+  {
+    name: "Horizon Zero Dawn (Arabic)",
+    genre: "ADVENTURE",
+    size: "- GB",
+    desc: "مغامرة بعالم مفتوح ضد وحوش آلية مع ترجمة عربية.",
+    icon: "🎮",
+    img: "94.png",
+    stock: "In Stock",
+    ps5:  1045,
+    ps4:  545,
+    sec:  745
+  },
+  {
+    name: "Injustice 2",
+    genre: "ACTION",
+    size: "- GB",
+    desc: "قتالات قوية بين أبطال وشرار عالم DC مع قصة ممتعة جدًا.",
+    icon: "🎮",
+    img: "95.png",
+    stock: "In Stock",
+    ps5:  null,
+    ps4:  320,
+    sec:  295
+  },
+  {
+    name: "Overcooked Bundle",
+    genre: "ADVENTURE",
+    size: "- GB",
+    desc: "لعبة تعاونية كوميدية لإدارة المطابخ وسط فوضى وضحك مستمر.",
+    icon: "🎮",
+    img: "96.png",
+    stock: "In Stock",
+    ps5:  null,
+    ps4:  445,
+    sec:  null
+  },
+  {
+    name: "Sifu",
+    genre: "ACTION",
+    size: "- GB",
+    desc: "لعبة قتال تعتمد على مهارات الكونغ فو وتزداد صعوبة مع التقدم.",
+    icon: "🎮",
+    img: "97.png",
+    stock: "In Stock",
+    ps5:  null,
+    ps4:  445,
+    sec:  null
+  },
+  {
+    name: "The Division 2",
+    genre: "ACTION",
+    size: "- GB",
+    desc: "شوتر أونلاين بعالم مدمر ومهمات تعاونية وتجميع معدات.",
+    icon: "🎮",
+    img: "98.png",
+    stock: "In Stock",
+    ps5:  null,
+    ps4:  395,
+    sec:  345
+  },
+  {
+    name: "UFC 5",
+    genre: "SPORTS",
+    size: "- GB",
+    desc: "تجربة قتال MMA واقعية جدًا بحركات وضربات محسنة.",
+    icon: "🎮",
+    img: "99.png",
+    stock: "In Stock",
+    ps5:  645,
+    ps4:  null,
+    sec:  495
+  },
+  {
+    name: "Red Dead Redemption 1",
+    genre: "ACTION",
+    size: "- GB",
+    desc: "مغامرة غرب أمريكي كلاسيكية بقصة قوية وعالم مفتوح ممتع.",
+    icon: "🎮",
+    img: "100.png",
+    stock: "In Stock",
+    ps5:  null,
+    ps4:  null,
+    sec:  520
+  },
+  {
+    name: "Ghost Recon Breakpoint",
+    genre: "ACTION",
+    size: "- GB",
+    desc: "شوتر تكتيكي بعالم مفتوح ومهمات عسكرية وتخفي وتعاون.",
+    icon: "🎮",
+    img: "101.png",
+    stock: "In Stock",
+    ps5:  0,
+    ps4:  370,
+    sec:  0
+  },
+  {
+    name: "Poppy Playtime Chapter 2",
+    genre: "HORROR",
+    size: "- GB",
+    desc: "تكملة رعب وألغاز بأماكن جديدة ومطاردات أكثر توترًا.",
+    icon: "🎮",
+    img: "102.png",
+    stock: "In Stock",
+    ps5:  null,
+    ps4:  395,
+    sec:  null 
+  },
+  {
+    name: "Poppy Playtime Chapter 3",
+    genre: "HORROR",
+    size: "- GB",
+    desc: "جزء أكثر رعبًا وغموضًا مع وحوش وأجواء مخيفة جدًا.",
+    icon: "🎮",
+    img: "103.png",
+    stock: "In Stock",
+    ps5:  null,
+    ps4:  null,
+    sec:  395
+  },
+  {
+    name: "Rematch",
+    genre: "SPORTS",
+    size: "- GB",
+    desc: "لعبة كورة أركيد سريعة تعتمد على المهارة واللعب الجماعي.",
+    icon: "🎮",
+    img: "104.png",
+    stock: "In Stock",
+    ps5:  null,
+    ps4:  null,
+    sec:  595
+  },
+  {
+    name: "Mortal Kombat 1",
+    genre: "ACTION",
+    size: "- GB",
+    desc: "لعبة قتال دموية بحركات Finishers قوية وجرافيك ممتاز.",
+    icon: "🎮",
+    img: "105.png",
+    stock: "In Stock",
+    ps5:  645,
+    ps4:  null,
+    sec:  545
+  },
+  // ── لإضافة لعبة جديدة: انسخ الكتلة فوق وعدّل القيم ──
+];
+
+// ── PS Plus ── سعرين فقط: PS5 Primary / PS4 Primary
+const psplusProducts = [
+  {
+    name: "PS Plus Essential 1Month Essential",
+    genre: "SUBSCRIPTION",
+    desc: "اشتراك بلايستيشن بلس أساسي  لمدة شهر متوفر سكندري للطلب وتس— ألعاب مجانية شهرية وخدمة اللعب  أونلاين",
+    icon: "➕",
+    img: "plus.png",
+    stock: "In Stock",
+    ps5: 580,
+    ps4: 380
+  },
+  {
+    name: "PS Plus 3Months Essential",
+    genre: "SUBSCRIPTION",
+    desc: "اشتراك بلايستيشن بلس أساسي لمدة تلت شهور متوفر سكندري للطلب وتس — ألعاب مجانية شهرية وخدمة اللعب أونلاين",
+    icon: "➕",
+    img: "plus.png",
+    stock: "In Stock",
+    ps5: 1330,
+    ps4: 480
+  },
+    {
+    name: "PS Plus 1 Year Essential",
+    genre: "SUBSCRIPTION",
+    desc: "اشتراك بلايستيشن بلس أساسي لمدة سنه متوفر سكندري للطلب وتس— ألعاب مجانية شهرية وخدمة اللعب أونلاين",
+    icon: "➕",
+    img: "plus.png",
+    stock: "In Stock",
+    ps5: 1960,
+    ps4: 640
+  },
+    {
+    name: "PS Plus Extra 1Month",
+    genre: "SUBSCRIPTION",
+    desc: "اشتراك بلايستيشن بلس اضافي لمدة شهر متوفر سكندري للطلب وتس— ألعاب مجانية شهرية وخدمة اللعب أونلاين",
+    icon: "➕",
+    img: "plus.png",
+    stock: "In Stock",
+    ps5: 1045,
+    ps4: 1045
+  },
+    {
+    name: "PS Plus Extra 3Months",
+    genre: "SUBSCRIPTION",
+    desc: "اشتراك بلايستيشن بلس اضافي لمدة ثلاثه شهور متوفر سكندري للطلب وتس— ألعاب مجانية شهرية وخدمة اللعب أونلاين",
+    icon: "➕",
+    img: "plus.png",
+    stock: "In Stock",
+    ps5: 1665,
+    ps4: 860
+  },
+    {
+    name: "PS Plus Extra 1Year",
+    genre: "SUBSCRIPTION",
+    desc: "اشتراك بلايستيشن بلس اضافي لمدة سنه متوفر سكندري للطلب وتس— ألعاب مجانية شهرية وخدمة اللعب أونلاين",
+    icon: "➕",
+    img: "plus.png",
+    stock: "In Stock",
+    ps5: 3120,
+    ps4: 1220
+  },
+  {
+    name: "PS Plus Deluxe 1Month",
+    genre: "SUBSCRIPTION",
+    desc: "اشتراك بلايستيشن بلس فاخر لمدة شهر متوفر سكندري للطلب وتس— ألعاب مجانية شهرية وخدمة اللعب أونلاين",
+    icon: "➕",
+    img: "plus.png",
+    stock: "Out of Stock",
+    ps5: null,
+    ps4: null
+  },
+  {
+    name: "PS Plus Deluxe 3Months",
+    genre: "SUBSCRIPTION",
+    desc: "اشتراك بلايستيشن بلس فاخر لمدة شهر متوفر سكندري للطلب وتس— ألعاب مجانية شهرية وخدمة اللعب أونلاين",
+    icon: "➕",
+    img: "plus.png",
+    stock: "Out of Stock",
+    ps5: null,
+    ps4: null
+  },
+  {
+    name: "PS Plus Deluxe 1Year",
+    genre: "SUBSCRIPTION",
+    desc: "اشتراك بلايستيشن بلس فاخر لمدة شهر متوفر سكندري للطلب وتس— ألعاب مجانية شهرية وخدمة اللعب أونلاين",
+    icon: "➕",
+    img: "plus.png",
+    stock: "Out of Stock",
+    ps5: null,
+    ps4: null
+  },
+  // ── لإضافة منتج جديد: انسخ الكتلة فوق وعدّل ──
+];
+
+// ── Fortnite / V-Bucks ── سعر واحد فقط
+const fortniteProducts = [
+  { name: "800 V-Bucks",       genre: "CURRENCY",     icon: "⚡", img: "vbucks.png", stock: "In Stock", price: 455,  desc: "فورتنايت V-Bucks — العملة الرسمية داخل اللعبة لشراء الأزياء والمحتوى" },
+  { name: "2,400 V-Bucks",     genre: "CURRENCY",     icon: "⚡", img: "vbucks.png", stock: "In Stock", price: 850,  desc: "فورتنايت V-Bucks — العملة الرسمية داخل اللعبة لشراء الأزياء والمحتوى" },
+  { name: "4,500 V-Bucks",     genre: "CURRENCY",     icon: "⚡", img: "vbucks.png", stock: "In Stock", price: 1300, desc: "فورتنايت V-Bucks — العملة الرسمية داخل اللعبة لشراء الأزياء والمحتوى" },
+  { name: "Crew Pack Fortnite",genre: "SUBSCRIPTION", icon: "👑", img: "crew.png",   stock: "In Stock", price: 350,  desc: "باقة الكرو الشهرية — تشمل لعبة + V-Bucks + سكن حصري كل شهر" },
+   { name: "500 Credits",       genre: "CURRENCY",     icon: "⚡", img: "rl.png", stock: "In Stock", price: 385,  desc: " العملة الرسمية داخل اللعبة لشراء الأزياء والمحتوى" },
+   { name: "Rocket Pass",       genre: "CURRENCY",     icon: "⚡", img: "rl.png", stock: "In Stock", price: 530,  desc: " العملة الرسمية داخل اللعبة لشراء الأزياء والمحتوى" },
+   { name: "1100 Credits",       genre: "CURRENCY",     icon: "⚡", img: "rl.png", stock: "In Stock", price: 550,  desc: " العملة الرسمية داخل اللعبة لشراء الأزياء والمحتوى" },
+   { name: "3000 Credits",       genre: "CURRENCY",     icon: "⚡", img: "rl.png", stock: "In Stock", price: 1010,  desc: " العملة الرسمية داخل اللعبة لشراء الأزياء والمحتوى" },
+   { name: "6500 Credits",       genre: "CURRENCY",     icon: "⚡", img: "rl.png", stock: "In Stock", price: 1910,  desc: " العملة الرسمية داخل اللعبة لشراء الأزياء والمحتوى" },
+    { name: "475 Points",       genre: "CURRENCY",     icon: "⚡", img: "val.png", stock: "In Stock", price: 525,  desc: " العملة الرسمية داخل اللعبة لشراء الأزياء والمحتوى" },
+     { name: "1000 Points",       genre: "CURRENCY",     icon: "⚡", img: "val.png", stock: "In Stock", price: 785,  desc: " العملة الرسمية داخل اللعبة لشراء الأزياء والمحتوى" },
+      { name: "2050 Points",       genre: "CURRENCY",     icon: "⚡", img: "val.png", stock: "In Stock", price: 1425,  desc: " العملة الرسمية داخل اللعبة لشراء الأزياء والمحتوى" },
+       { name: "3650 Points",       genre: "CURRENCY",     icon: "⚡", img: "val.png", stock: "In Stock", price: 2345,  desc: " العملة الرسمية داخل اللعبة لشراء الأزياء والمحتوى" },
+  // ── لإضافة منتج جديد: انسخ سطر وعدّل ──
+];
+
+// ── عروض اليوم ── سعر واحد فقط
+const dailyProducts = [
+  { name: "Need For Speed Payback Deluxe Edition ",  genre: "Primary Ps4", icon: "🎬", img: "nfs.png",        stock: "In Stock", price: 99, desc: "خصم يصل الي 50% علي لعبه سيارات نسخه محسنه" },
+  // ── لإضافة منتج جديد: انسخ سطر وعدّل ──
+];
+const myProducts = [
+  { name: "Netflix 4K 2Months User", genre: "TV-PS-Mobile", icon: "🎮", img: "netf.png", stock: "In Stock", price: 270, desc: "نتفليكس 4K — أفلام ومسلسلات بجودة عالية على أي جهاز" },
+  { name: "Shahid VIP 1Month",  genre: "STREAMING", icon: "🎬", img: "sha.png",        stock: "In Stock", price: 199, desc: "شاهد VIP — محتوى عربي وعالمي حصري بدون إعلانات" },
+   { name: "Yango Play 1Month",  genre: "STREAMING", icon: "🎬", img: "180.png",        stock: "In Stock", price: 210, desc: "ش — محتوى عربي وعالمي حصري  " },
+];
+// ── GTA Online ── سعر واحد فقط
+const gtaProducts = [
+  { name: "10M Cash",  genre: "GTA ONLINE", icon: "🚗", img: "rgtav.png", stock: "In Stock", price: 395,  desc: "جي تي إيه أونلاين كاش — 10 مليون جنيه داخل اللعبة" },
+  { name: "30M Cash",  genre: "GTA ONLINE", icon: "💵", img: "rgtav.png", stock: "In Stock", price: 845,  desc: "جي تي إيه أونلاين كاش — 30 مليون جنيه داخل اللعبة" },
+  { name: "60M Cash",  genre: "GTA ONLINE", icon: "💵", img: "rgtav.png", stock: "In Stock", price: 1445, desc: "جي تي إيه أونلاين كاش — 60 مليون جنيه داخل اللعبة" },
+  { name: "120M Cash", genre: "GTA ONLINE", icon: "🏆", img: "rgtav.png", stock: "In Stock", price: 2445, desc: "جي تي إيه أونلاين كاش — 120 مليون جنيه داخل اللعبة" },
+  // ── لإضافة منتج جديد: انسخ سطر وعدّل ──
+];
+
+// ── PC & Xbox ── سعر واحد فقط
+const pcxboxProducts = [
+  {
+    name: "Game Pass Ultimate 2Month",
+    genre: "XBOX Console",
+    icon: "🎮",
+    img: "xbox.png",
+    stock: "In Stock",
+    home: 680,   // سعر Xbox Home
+    sign:   630,   // سعر PC
+  },
+  {
+    name: "Game Pass Ultimate 5Month",
+    genre: "XBOX Console",
+    icon: "🎮",
+    img: "xbox.png",
+    stock: "In Stock",
+    home: 1350,   // سعر Xbox Home
+    sign:   1200,   // سعر PC
+  },
+  {
+    name: "Game Pass Ultimate 2Month",
+    genre: "PC",
+    desc: " الاشتراك كامل للبي سي لا يوجد هوم أو ساين هو فقط اشتراك كامل للبي سي",
+    icon: "🎮",
+    img: "xboxpc.png",
+    stock: "In Stock",
+    home: 440,   // سعر Xbox Home
+    
+  },
+  {
+    name: "Game Pass Ultimate 5Month",
+    genre: "PC",
+    desc: " الاشتراك كامل للبي سي لا يوجد هوم أو ساين هو فقط اشتراك كامل للبي سي",
+    icon: "🎮",
+    img: "xboxpc.png",
+    stock: "In Stock",
+    home: 750,   // سعر Xbox Home
+    
+  },
+  {
+    name: "Game Pass Ultimate 13Month",
+    genre: "PC",
+    desc: " الاشتراك كامل للبي سي لا يوجد هوم أو ساين هو فقط اشتراك كامل للبي سي",
+    icon: "🎮",
+    img: "xboxpc.png",
+    stock: "In Stock",
+    home: 1350,   // سعر Xbox Home
+   
+  },
+  {
+    name: "FC26 PC Steam",
+    genre: "SPORTS",
+    desc: " اللعبه كامله للبي سي لا يوجد هوم أو ساين هي فقط لعبه كامله للبي سي",
+    icon: "🎮",
+    img: "fcpc.png",
+    stock: "In Stock",
+    home: 950,   // سعر Xbox Home
+    
+  },
+   {
+    name: "GTAV PC Steam",
+    genre: "ACTION",
+    desc: " اللعبه كامله للبي سي لا يوجد هوم أو ساين هي فقط لعبه كامله للبي سي",
+    icon: "🎮",
+    img: "gtapc.png",
+    stock: "In Stock",
+    home: 900,   // سعر Xbox Home
+    
+  },
+   {
+    name: "Arc Raiders",
+    genre: "ADVENTURE",
+    desc: " اللعبه كامله للبي سي لا يوجد هوم أو ساين هي فقط لعبه كامله للبي سي",
+    icon: "🎮",
+    img: "arcpc.png",
+    stock: "In Stock",
+    home: 1650,   // سعر Xbox Home
+    
+  },
+   {
+    name: "Battlefield 6 PC Steam",
+    genre: "ACTION",
+    desc: " اللعبه كامله للبي سي لا يوجد هوم أو ساين هي فقط لعبه كامله للبي سي",
+    icon: "🎮",
+    img: "battpc.png",
+    stock: "In Stock",
+    home: 1900,   // سعر Xbox Home
+    
+  },
+  // ── لإضافة منتج جديد: انسخ الكتلة وعدّل ──
+];
+
+// ── إيجار ── سعر واحد فقط
+const rentProducts = [
+{ name: "Ninja Gaiden 4", genre: "RENTAL 21 Day!", icon: "🔑", img: "932.png", stock: "In Stock", price: 545, desc: "ايجار 21 يوم" },
+
+{ name: "Ninja Gaiden 4", genre: "RENTAL 21 Day!", icon: "🔑", img: "932.png", stock: "In Stock", price: 545, desc: "ايجار 21 يوم" },
+
+
+  // ── لإضافة منتج جديد: انسخ سطر وعدّل ──
+];
+
+// ============================================================
+//   ⚙️  كود الرسم التلقائي — لا تعدّل تحت هذا السطر
+// ============================================================
+function renderPCXbox() {
+  const grid = document.getElementById('pcxbox');
+  if(!grid) return;
+  const key = 'pcxbox';
+  _allProducts[key] = pcxboxProducts.map(p => {
+    const prices = [
+      { platform:'home', type:'Home', price: p.home, avail: p.home ? 10 : 0 },
+      { platform:'sign',   type:'Digital', price: p.sign, avail: p.sign ? 10 : 0 }
+    ];
+    return { _title:p.name, _genre:p.genre, _size:'—', _desc:p.desc||'', _icon:p.icon, _stock:p.stock, _prices:prices, _img:p.img||'', _firstPrice: p.home||p.sign||0 };
+  });
+  grid.innerHTML = _allProducts[key].map((p, i) => `
+    <div class="game-card" onclick="openDetailByKey('${key}',${i})">
+      ${_imgTag({img:p._img,icon:p._icon})}
+      ${_heartBtn(key,i,p._title)}
+      <span class="stock-badge ${stockClass(p._stock)}">${p._stock}</span>
+      <div class="game-card-body">
+        <div><span class="game-genre">${p._genre}</span></div>
+        <div class="game-name">${p._title}</div>
+        <div class="game-prices">
+          ${p._prices.map(pr=>`<div class="price-row"><span class="platform-badge pb-${pr.platform.toLowerCase()}">${pr.platform}</span><span class="price-val ${pr.price?'':'na'}">${pr.price?fmtPrice(pr.price)+' L.E':'N/A'}</span></div>`).join('')}
+        </div>
+        <div class="card-actions">
+          <button class="btn-buy" onclick="event.stopPropagation();openDetailByKey('${key}',${i})">BUY NOW</button>
+          <button class="btn-cart-icon btn-copy-price" onclick="event.stopPropagation();copyProductPrice('${key}',${i})" title="نسخ السعر"><i class="fas fa-copy"></i></button>
+          <button class="btn-cart-icon" onclick="event.stopPropagation();addToCart('${p._title}',${p._firstPrice})"><i class="fas fa-cart-plus"></i></button>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+// مخزن للمنتجات عشان نوصلها بـ index بدل inline JSON
+const _allProducts = {};
+
+function stockClass(s){ return s==='Low Stock'?'stock-low':s==='Out of Stock'?'stock-out':'stock-in'; }
+
+function _imgTag(p){
+  return p.img
+    ? `<img class="game-card-img" src="${p.img}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="game-card-img-placeholder" style="display:none">${p.icon}</div>`
+    : `<div class="game-card-img-placeholder">${p.icon}</div>`;
+}
+
+function _heartBtn(key, i, title){
+  const isFav = wishlist.includes(title);
+  return `<button class="wishlist-heart ${isFav?'active':''}" onclick="event.stopPropagation();toggleWishlist('${key}',${i},this)"><i class="${isFav?'fas':'far'} fa-heart"></i></button>`;
+}
+
+// openDetail بيشتغل بـ key ورقم
+function openDetailByKey(storeKey, idx){
+  const p = _allProducts[storeKey][idx];
+  trackRecentlyViewed(storeKey, idx);
+  openDetail(p._title, p._genre, p._size, p._desc, p._icon, p._stock, p._prices, p._img, p._oldPrice, p._rating, p._reviews, p._lang);
+}
+
+// رسم PSN (3 أسعار: PS5 / PS4 / SEC)
+function renderPSN() {
+  const grid = document.getElementById('psn');
+  if(!grid) return;
+  const key = 'psn';
+  _allProducts[key] = psnProducts.map(p => {
+    const prices = [
+      { platform:'PS5', type:'Primary',   price: p.ps5, avail: p.ps5 ? 10 : 0 },
+      { platform:'PS4', type:'Primary',   price: p.ps4, avail: p.ps4 ? 10 : 0 },
+      { platform:'SEC', type:'Secondary', price: p.sec, avail: p.sec ? 10 : 0 }
+    ];
+    return { _title:p.name, _genre:p.genre, _size:p.size||'—', _desc:p.desc||'', _icon:p.icon, _stock:p.stock, _prices:prices, _img:p.img||'', _firstPrice: p.ps5||p.ps4||p.sec||0 };
+  });
+  grid.innerHTML = _allProducts[key].map((p, i) => `
+    <div class="game-card" onclick="openDetailByKey('${key}',${i})">
+      ${_imgTag({img:p._img,icon:p._icon})}
+      ${_heartBtn(key,i,p._title)}
+      <span class="stock-badge ${stockClass(p._stock)}">${p._stock}</span>
+      <div class="game-card-body">
+        <div><span class="game-genre">${p._genre}</span>${p._size&&p._size!=='—'?`<span class="game-size">· ${p._size}</span>`:''}</div>
+        <div class="game-name">${p._title}</div>
+        <div class="game-prices">
+          ${p._prices.map(pr=>`<div class="price-row"><span class="platform-badge pb-${pr.platform.toLowerCase()}">${pr.platform}</span><span class="price-val ${pr.price?'':'na'}">${pr.price?fmtPrice(pr.price)+' L.E':'N/A'}</span></div>`).join('')}
+        </div>
+        <div class="card-actions">
+          <button class="btn-buy" onclick="event.stopPropagation();openDetailByKey('${key}',${i})">BUY NOW</button>
+          <button class="btn-cart-icon btn-copy-price" onclick="event.stopPropagation();copyProductPrice('${key}',${i})" title="نسخ السعر"><i class="fas fa-copy"></i></button>
+          <button class="btn-cart-icon" onclick="event.stopPropagation();addToCart('${p._title}',${p._firstPrice})"><i class="fas fa-cart-plus"></i></button>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+// رسم PS Plus (2 أسعار: PS5 / PS4)
+function renderPSPlus() {
+  const grid = document.getElementById('psplus');
+  if(!grid) return;
+  const key = 'psplus';
+  _allProducts[key] = psplusProducts.map(p => {
+    const prices = [
+      { platform:'PS5', type:'Primary', price: p.ps5, avail: p.ps5 ? 10 : 0 },
+      { platform:'PS4', type:'Primary', price: p.ps4, avail: p.ps4 ? 10 : 0 }
+    ];
+    return { _title:p.name, _genre:p.genre, _size:'—', _desc:p.desc||'', _icon:p.icon, _stock:p.stock, _prices:prices, _img:p.img||'', _firstPrice: p.ps5||p.ps4||0 };
+  });
+  grid.innerHTML = _allProducts[key].map((p, i) => `
+    <div class="game-card" onclick="openDetailByKey('${key}',${i})">
+      ${_imgTag({img:p._img,icon:p._icon})}
+      ${_heartBtn(key,i,p._title)}
+      <span class="stock-badge ${stockClass(p._stock)}">${p._stock}</span>
+      <div class="game-card-body">
+        <div><span class="game-genre">${p._genre}</span></div>
+        <div class="game-name">${p._title}</div>
+        <div class="game-prices">
+          ${p._prices.map(pr=>`<div class="price-row"><span class="platform-badge pb-${pr.platform.toLowerCase()}">${pr.platform}</span><span class="price-val ${pr.price?'':'na'}">${pr.price?fmtPrice(pr.price)+' L.E':'N/A'}</span></div>`).join('')}
+        </div>
+        <div class="card-actions">
+          <button class="btn-buy" onclick="event.stopPropagation();openDetailByKey('${key}',${i})">BUY NOW</button>
+          <button class="btn-cart-icon btn-copy-price" onclick="event.stopPropagation();copyProductPrice('${key}',${i})" title="نسخ السعر"><i class="fas fa-copy"></i></button>
+          <button class="btn-cart-icon" onclick="event.stopPropagation();addToCart('${p._title}',${p._firstPrice})"><i class="fas fa-cart-plus"></i></button>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+// رسم Grid بسعر واحد (Fortnite / Daily / GTA / PC&Xbox / Rent)
+function renderSimpleGrid(gridId, products) {
+  const grid = document.getElementById(gridId);
+  if(!grid) return;
+  const key = gridId;
+  _allProducts[key] = products.map(p => ({
+    _title:p.name, _genre:p.genre, _size:'—', _desc:p.desc||'', _icon:p.icon, _stock:p.stock,
+    _prices:[{ platform:p.genre, type:'Digital', price:p.price, avail:10 }],
+    _img:p.img||'', _firstPrice:p.price
+  }));
+  grid.innerHTML = _allProducts[key].map((p, i) => `
+    <div class="game-card" onclick="openDetailByKey('${key}',${i})">
+      ${_imgTag({img:p._img,icon:p._icon})}
+      ${_heartBtn(key,i,p._title)}
+      <span class="stock-badge ${stockClass(p._stock)}">${p._stock}</span>
+      <div class="game-card-body">
+        <div><span class="game-genre">${p._genre}</span></div>
+        <div class="game-name">${p._title}</div>
+        <div class="game-prices">
+          <div class="price-row"><span class="price-val" style="font-size:1.1rem;color:var(--red)">${fmtPrice(p._firstPrice)} L.E</span></div>
+        </div>
+        <div class="card-actions">
+          <button class="btn-buy" onclick="event.stopPropagation();openDetailByKey('${key}',${i})">BUY NOW</button>
+          <button class="btn-cart-icon btn-copy-price" onclick="event.stopPropagation();copyProductPrice('${key}',${i})" title="نسخ السعر"><i class="fas fa-copy"></i></button>
+          <button class="btn-cart-icon" onclick="event.stopPropagation();addToCart('${p._title}',${p._firstPrice})"><i class="fas fa-cart-plus"></i></button>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function renderAllProducts() {
+  renderPSN();
+  renderPSPlus();
+  renderSimpleGrid('fortnite', fortniteProducts);
+  renderSimpleGrid('daily',    dailyProducts);
+  renderSimpleGrid('gta',      gtaProducts);
+  renderPCXbox();
+  renderSimpleGrid('rent',     rentProducts);
+  renderSimpleGrid('mycustomid', myProducts);
+}
+
+window.addEventListener('DOMContentLoaded', renderAllProducts);
+
+
+// ===== STATE =====
+let currentUser = null;
+let cart = JSON.parse(localStorage.getItem('r3_cart') || '[]');
+let wishlist = JSON.parse(localStorage.getItem('r3_wishlist') || '[]');
+let wishlistMode = false;
+let currentDetailGame = null;
+let selectedAccountIndex = -1;
+let orderQty = 1;
+let orderBasePrice = 0;
+let discountApplied = false;
+const WA_NUMBER = '201281537135';
+
+// ===== تنسيق السعر بفواصل الآلاف =====
+function fmtPrice(n) {
+  if (!n) return null;
+  return Number(n).toLocaleString('en-US');
+}
+
+// ===== المنتجات اللي اتفرج عليها العميل قبل كده =====
+function trackRecentlyViewed(storeKey, idx) {
+  const p = _allProducts[storeKey] && _allProducts[storeKey][idx];
+  if (!p) return;
+  let recent = JSON.parse(localStorage.getItem('r3_recent') || '[]');
+  recent = recent.filter(r => r.title !== p._title);
+  recent.unshift({ key: storeKey, idx, title: p._title, icon: p._icon, img: p._img });
+  recent = recent.slice(0, 8);
+  localStorage.setItem('r3_recent', JSON.stringify(recent));
+  renderRecentlyViewed();
+}
+
+function renderRecentlyViewed() {
+  const wrap = document.getElementById('recentStrip');
+  const itemsEl = document.getElementById('recentStripItems');
+  if (!wrap || !itemsEl) return;
+  const recent = JSON.parse(localStorage.getItem('r3_recent') || '[]');
+  if (!recent.length) { wrap.style.display = 'none'; return; }
+  wrap.style.display = 'block';
+  itemsEl.innerHTML = recent.map(r => `
+    <div class="recent-item" onclick="openRecentItem('${r.key}',${r.idx})">
+      ${r.img ? `<img src="${r.img}" onerror="this.style.display='none';this.outerHTML='<div class=&quot;recent-item-icon&quot;>${r.icon || '🎮'}</div>'">` : `<div class="recent-item-icon">${r.icon || '🎮'}</div>`}
+      <div class="recent-item-name">${r.title}</div>
+    </div>`).join('');
+}
+
+function openRecentItem(storeKey, idx) {
+  if (_allProducts[storeKey] && _allProducts[storeKey][idx]) {
+    openDetailByKey(storeKey, idx);
+  } else {
+    showToast('⚠️ المنتج ده مش متاح دلوقتي');
+  }
+}
+
+// ===== عداد تنازلي لعروض اليوم (بينتهي مع نهاية اليوم بتوقيت الجهاز) =====
+function startDailyCountdown() {
+  const el = document.getElementById('countdownText');
+  if (!el) return;
+  function tick() {
+    const now = new Date();
+    const end = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999);
+    const diff = Math.max(0, end - now);
+    const h = String(Math.floor(diff / 3600000)).padStart(2, '0');
+    const m = String(Math.floor((diff % 3600000) / 60000)).padStart(2, '0');
+    const s = String(Math.floor((diff % 60000) / 1000)).padStart(2, '0');
+    el.textContent = `${h}:${m}:${s}`;
+  }
+  tick();
+  setInterval(tick, 1000);
+}
+
+// ===== SPLASH =====
+setTimeout(() => {
+  document.getElementById('splash').style.opacity = '0';
+  document.getElementById('splash').style.transition = 'opacity 0.5s';
+  setTimeout(() => {
+    document.getElementById('splash').style.display = 'none';
+  }, 500);
+}, 2200);
+
+// ===== HEADER AUTO-HIDE + BACK-TO-TOP + WA FLOAT =====
+window.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('waFloat').href = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent('عايز أعرف تفاصيل أكتر عن منتجاتكم')}`;
+  updateWishlistBadge();
+  document.getElementById('cartCount').textContent = cart.length || 0;
+  renderRecentlyViewed();
+  startDailyCountdown();
+});
+
+// اهتزاز خفيف عند إضافة للسلة أو تفاعل مهم (لو الجهاز بيدعمها)
+function vibrateTap() {
+  if (navigator.vibrate) navigator.vibrate(15);
+}
+
+let _lastScrollY = 0;
+window.addEventListener('scroll', () => {
+  const cur = window.scrollY;
+  const header = document.querySelector('header');
+  if (cur > _lastScrollY && cur > 90) {
+    header.classList.add('header-hidden');
+  } else {
+    header.classList.remove('header-hidden');
+  }
+  _lastScrollY = cur;
+  document.getElementById('backToTop').classList.toggle('show', cur > 500);
+}, { passive: true });
+
+// ===== FAQ ACCORDION =====
+function toggleFaq(btn) {
+  const answer = btn.nextElementSibling;
+  const isOpen = answer.classList.contains('open');
+  document.querySelectorAll('.faq-a.open').forEach(a => a.classList.remove('open'));
+  document.querySelectorAll('.faq-q.open').forEach(q => q.classList.remove('open'));
+  if (!isOpen) {
+    answer.classList.add('open');
+    btn.classList.add('open');
+  }
+}
+
+// ===== TABS =====
+// ===== SIDE DRAWER =====
+function openDrawer() {
+  document.getElementById('sideDrawer').classList.add('open');
+  document.getElementById('drawerOverlay').classList.add('open');
+}
+function closeDrawer() {
+  document.getElementById('sideDrawer').classList.remove('open');
+  document.getElementById('drawerOverlay').classList.remove('open');
+}
+
+// ===== GO TO TAB (يستخدم في الكاتيجوريز، الهيرو، والقائمة الجانبية) =====
+function goToTab(id, scroll) {
+  const btn = document.querySelector(`.tab-btn[onclick*="'${id}'"]`);
+  if (btn) {
+    showTab(id, btn);
+    btn.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+  }
+  if (scroll) {
+    document.querySelector('.tabs-scroll').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+}
+
+// ===== HERO CAROUSEL AUTOPLAY =====
+(function initHeroCarousel() {
+  const slides = document.querySelectorAll('#heroCarousel .hero-slide');
+  const dotsWrap = document.getElementById('heroDots');
+  if (!slides.length || !dotsWrap) return;
+  slides.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'hero-dot' + (i === 0 ? ' active' : '');
+    dotsWrap.appendChild(d);
+  });
+  const dots = dotsWrap.querySelectorAll('.hero-dot');
+  let idx = 0;
+  setInterval(() => {
+    slides[idx].classList.remove('active');
+    dots[idx].classList.remove('active');
+    idx = (idx + 1) % slides.length;
+    slides[idx].classList.add('active');
+    dots[idx].classList.add('active');
+  }, 4000);
+})();
+
+function showTab(id, el) {
+  document.querySelectorAll('.game-grid').forEach(g => g.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  el.classList.add('active');
+  document.getElementById('dailyCountdown').classList.toggle('show', id === 'daily');
+  filterVisibleCards();
+}
+
+// ===== SEARCH + WISHLIST FILTER (موحّدين مع بعض) =====
+function filterVisibleCards() {
+  const activeGrid = document.querySelector('.game-grid.active');
+  if (!activeGrid) return;
+  const searchInput = document.getElementById('mainSearchInput');
+  const searchVal = (searchInput ? searchInput.value : '').trim().toLowerCase();
+  document.getElementById('searchClearBtn').classList.toggle('show', !!searchVal);
+
+  let anyVisible = false;
+  activeGrid.querySelectorAll('.game-card').forEach(c => {
+    const nameEl = c.querySelector('.game-name');
+    const title = nameEl ? nameEl.textContent : '';
+    const matchesSearch = !searchVal || title.toLowerCase().includes(searchVal);
+    const matchesWishlist = !wishlistMode || wishlist.includes(title);
+    const visible = matchesSearch && matchesWishlist;
+    c.style.display = visible ? '' : 'none';
+    if (visible) anyVisible = true;
+  });
+  toggleEmptyState(activeGrid, anyVisible);
+}
+
+function toggleEmptyState(grid, anyVisible) {
+  let empty = grid.querySelector('.empty-state-msg');
+  if (!anyVisible) {
+    if (!empty) {
+      empty = document.createElement('div');
+      empty.className = 'empty-state-msg';
+      empty.innerHTML = wishlistMode
+        ? '<i class="fas fa-heart-crack"></i><p>لسه معملتش أي منتج مفضل هنا</p>'
+        : '<i class="fas fa-search"></i><p>مفيش نتايج تطابق بحثك</p>';
+      grid.appendChild(empty);
+    } else {
+      empty.innerHTML = wishlistMode
+        ? '<i class="fas fa-heart-crack"></i><p>لسه معملتش أي منتج مفضل هنا</p>'
+        : '<i class="fas fa-search"></i><p>مفيش نتايج تطابق بحثك</p>';
+    }
+    empty.style.display = 'flex';
+  } else if (empty) {
+    empty.style.display = 'none';
+  }
+}
+
+// ===== WISHLIST =====
+function toggleWishlist(storeKey, idx, el) {
+  const p = _allProducts[storeKey] && _allProducts[storeKey][idx];
+  if (!p) return;
+  const title = p._title;
+  const pos = wishlist.indexOf(title);
+  vibrateTap();
+  if (pos > -1) {
+    wishlist.splice(pos, 1);
+    el.classList.remove('active');
+    el.querySelector('i').className = 'far fa-heart';
+    showToast('💔 اتشال من المفضلة');
+  } else {
+    wishlist.push(title);
+    el.classList.add('active');
+    el.querySelector('i').className = 'fas fa-heart';
+    showToast('❤️ اتضاف للمفضلة');
+  }
+  localStorage.setItem('r3_wishlist', JSON.stringify(wishlist));
+  updateWishlistBadge();
+  if (wishlistMode) filterVisibleCards();
+}
+
+function toggleWishlistView() {
+  wishlistMode = !wishlistMode;
+  document.getElementById('wishlistBtn').classList.toggle('active', wishlistMode);
+  filterVisibleCards();
+  showToast(wishlistMode ? '❤️ بتعرض المفضلة بس دلوقتي' : '👁️ رجعنا نعرض كل المنتجات');
+}
+
+function updateWishlistBadge() {
+  const badge = document.getElementById('wishlistBadge');
+  badge.textContent = wishlist.length;
+  badge.classList.toggle('show', wishlist.length > 0);
+}
+
+// ===== DETAIL PANEL =====
+let detailQty = 1;
+
+function openDetail(title, genre, size, desc, icon, stockStatus, options, imgSrc, oldPrice, rating, reviews, lang) {
+  currentDetailGame = { title, genre, size, desc, icon, stockStatus, options, imgSrc, oldPrice, rating, reviews, lang };
+  selectedAccountIndex = -1;
+  detailQty = 1;
+  document.getElementById('det-qty-val').textContent = '1';
+  document.getElementById('det-agree').checked = true;
+
+  document.getElementById('det-title').textContent = title;
+  document.getElementById('det-genre').textContent = genre;
+  document.getElementById('det-desc').textContent = desc;
+  document.getElementById('det-size-val').textContent = (size && size !== '—') ? size : 'غير محدد';
+  document.getElementById('det-lang').textContent = lang || 'English Menus / EN-AR Voice';
+
+  // Rating
+  const r = rating || 5;
+  const revCount = reviews || Math.floor(Math.random() * 6) + 4;
+  document.getElementById('det-stars').textContent = '★'.repeat(Math.round(r)) + '☆'.repeat(5 - Math.round(r));
+  document.getElementById('det-rating-num').textContent = `${r.toFixed(1)} (${revCount})`;
+
+  // Image
+  const img = document.getElementById('det-img');
+  const ph = document.getElementById('det-placeholder');
+  img.src = imgSrc || '';
+  img.style.display = '';
+  ph.textContent = icon;
+  ph.style.display = 'none';
+  img.onerror = () => { img.style.display='none'; ph.style.display='flex'; };
+
+  // Options (pill style)
+  const optsEl = document.getElementById('det-options');
+  optsEl.innerHTML = options.map((opt, i) => {
+    const label = `${opt.type} ${opt.platform}`;
+    if (!opt.price) {
+      return `<button class="account-option disabled" disabled>${label}</button>`;
+    }
+    return `<button class="account-option" id="ao-${i}" onclick="selectAccount(${i})">${label}</button>`;
+  }).join('');
+
+  document.getElementById('det-order-btn').className = 'detail-order-btn';
+  document.getElementById('det-order-btn').textContent = 'SELECT AN ACCOUNT TYPE';
+  document.getElementById('det-price-row').style.display = 'none';
+
+  // Wishlist button initial state
+  const wbtn = document.getElementById('det-wishlist-btn');
+  const isFav = wishlist.includes(title);
+  wbtn.classList.toggle('active', isFav);
+  wbtn.querySelector('i').className = isFav ? 'fas fa-heart' : 'far fa-heart';
+
+  document.getElementById('detailPanel').classList.add('open');
+}
+
+// Add currently-open detail product to cart (uses selected option, or first available)
+function addCurrentToCart() {
+  if (!currentDetailGame) return;
+  if (!document.getElementById('det-agree').checked) { showToast('⚠️ لازم توافق على الشروط الأول'); return; }
+  const opt = (selectedAccountIndex > -1)
+    ? currentDetailGame.options[selectedAccountIndex]
+    : currentDetailGame.options.find(o => o.price);
+  if (!opt || !opt.price) { showToast('⚠️ اختار نوع الحساب الأول'); return; }
+  const qtyLabel = detailQty > 1 ? ` × ${detailQty}` : '';
+  addToCart(currentDetailGame.title + qtyLabel, opt.price * detailQty);
+}
+
+// Toggle wishlist from inside the detail panel
+function toggleWishlistFromDetail() {
+  if (!currentDetailGame) return;
+  const title = currentDetailGame.title;
+  const pos = wishlist.indexOf(title);
+  const btn = document.getElementById('det-wishlist-btn');
+  vibrateTap();
+  if (pos > -1) {
+    wishlist.splice(pos, 1);
+    btn.classList.remove('active');
+    btn.querySelector('i').className = 'far fa-heart';
+    showToast('💔 اتشال من المفضلة');
+  } else {
+    wishlist.push(title);
+    btn.classList.add('active');
+    btn.querySelector('i').className = 'fas fa-heart';
+    showToast('❤️ اتضاف للمفضلة');
+  }
+  localStorage.setItem('r3_wishlist', JSON.stringify(wishlist));
+  updateWishlistBadge();
+  if (wishlistMode) filterVisibleCards();
+}
+
+function selectAccount(i) {
+  selectedAccountIndex = i;
+  document.querySelectorAll('.account-option').forEach((el,idx) => {
+    el.classList.toggle('selected', idx===i);
+  });
+  const opt = currentDetailGame.options[i];
+  const btn = document.getElementById('det-order-btn');
+  btn.className = 'detail-order-btn ready';
+  btn.textContent = `ORDER NOW — ${fmtPrice(opt.price * detailQty)} L.E`;
+
+  // Price row (with optional Sale strike-through if oldPrice is set on the product)
+  const priceRow = document.getElementById('det-price-row');
+  const oldEl = document.getElementById('det-old-price');
+  const curEl = document.getElementById('det-current-price');
+  const saleEl = document.getElementById('det-sale-badge');
+  const total = opt.price * detailQty;
+  curEl.textContent = fmtPrice(total) + ' L.E';
+  const old = currentDetailGame.oldPrice;
+  if (old && old > opt.price) {
+    oldEl.textContent = fmtPrice(old * detailQty) + ' L.E';
+    oldEl.style.display = '';
+    saleEl.style.display = '';
+  } else {
+    oldEl.style.display = 'none';
+    saleEl.style.display = 'none';
+  }
+  priceRow.style.display = 'flex';
+}
+
+// ===== QUANTITY STEPPER =====
+function changeDetailQty(delta) {
+  detailQty = Math.max(1, detailQty + delta);
+  document.getElementById('det-qty-val').textContent = detailQty;
+  if (selectedAccountIndex > -1) selectAccount(selectedAccountIndex);
+}
+
+// ===== INSTRUCTIONS ACCORDION =====
+function toggleDetailAccordion(btn) {
+  btn.classList.toggle('open');
+  btn.nextElementSibling.classList.toggle('open');
+}
+
+// ===== مشاركة المنتج (للعميل يبعته لصحابه) =====
+function shareCurrentProduct() {
+  if (!currentDetailGame) return;
+  const g = currentDetailGame;
+  const lines = (g.options || []).filter(o => o.price).map(o => `${o.type || o.platform}: ${fmtPrice(o.price)} L.E`);
+  const text = `🎮 ${g.title}\n${lines.join('\n')}\n\nشوفها في R3 Store`;
+  if (navigator.share) {
+    navigator.share({ title: g.title, text }).catch(() => {});
+  } else {
+    copyTextRobust(text,
+      () => showToast('✅ اتنسخ تفاصيل المنتج — الصقها لصاحبك'),
+      () => showToast('❌ حصل خطأ في النسخ')
+    );
+  }
+}
+
+function closeDetail() {
+  document.getElementById('detailPanel').classList.remove('open');
+}
+
+function openOrderFromDetail() {
+  if (selectedAccountIndex < 0) return;
+  if (!document.getElementById('det-agree').checked) { showToast('⚠️ لازم توافق على الشروط الأول'); return; }
+  const game = currentDetailGame;
+  const opt = game.options[selectedAccountIndex];
+  orderQty = detailQty;
+
+  closeDetail();
+
+  // Populate order modal
+  document.getElementById('ord-game-name').textContent = game.title + (orderQty > 1 ? ` × ${orderQty}` : '');
+  const sel = document.getElementById('ord-account-select');
+  sel.innerHTML = game.options
+    .filter(o => o.price)
+    .map(o => `<option value="${o.price}">${o.platform} ${o.type} — ${fmtPrice(o.price)} L.E</option>`)
+    .join('');
+  sel.value = opt.price;
+  document.getElementById('ord-discount').value = '';
+  document.getElementById('upload-text').textContent = 'Click to upload payment screenshot';
+  discountApplied = false;
+  updateOrderTotal();
+
+  document.getElementById('orderModal').classList.add('open');
+}
+
+function closeOrder() { document.getElementById('orderModal').classList.remove('open'); }
+
+function selectPM(el, prefix, key) {
+  const list = el.closest('.payment-methods-list');
+  list.querySelectorAll('.pm-radio-card').forEach(c => {
+    c.classList.remove('active');
+    c.querySelector('input[type=radio]').checked = false;
+  });
+  list.querySelectorAll('.pm-instructions').forEach(i => i.classList.remove('show'));
+  el.classList.add('active');
+  el.querySelector('input[type=radio]').checked = true;
+  const box = document.getElementById(prefix + '-pm-' + key);
+  if (box) box.classList.add('show');
+}
+
+function updateOrderTotal() {
+  const unitPrice = parseInt(document.getElementById('ord-account-select').value)||0;
+  const price = unitPrice * orderQty;
+  orderBasePrice = price;
+  document.getElementById('ord-total').textContent = fmtPrice(price) + ' L.E';
+  discountApplied = false;
+}
+
+function applyDiscount() {
+  if (discountApplied) return showToast('⚠️ تم تطبيق كود الخصم بالفعل');
+  const code = document.getElementById('ord-discount').value.trim().toUpperCase();
+  const discounts = { 'R3NEW1': 10, 'SUMMER2026R3': 20, 'R3VIP': 25 };
+  if (discounts[code]) {
+    const disc = discounts[code];
+    const newPrice = Math.max(0, orderBasePrice - disc);
+    document.getElementById('ord-total').textContent = fmtPrice(newPrice) + ' L.E';
+    discountApplied = true;
+    showToast('✅ خصم ' + disc + ' L.E اتطبق!');
+  } else {
+    showToast('❌ كود الخصم غلط');
+  }
+}
+
+function handleUpload(input) {
+  if (input.files[0]) {
+    document.getElementById('upload-text').textContent = '✅ ' + input.files[0].name;
+  }
+}
+// ===== WORLD CUP PREDICTIONS =====
+function openPrediction(matchName) {
+  document.getElementById('pred-match-name').textContent = matchName;
+  document.getElementById('pred-hidden-match').value = matchName;
+  document.getElementById('pred-score1').value = '';
+  document.getElementById('pred-score2').value = '';
+  document.getElementById('pred-wa').value = '';
+  document.getElementById('predUploadInput1').value = '';
+  document.getElementById('predUploadInput2').value = '';
+  document.getElementById('pred-upload-text-1').textContent = 'اضغط لرفع الصورة الأولى';
+  document.getElementById('pred-upload-text-2').textContent = 'اضغط لرفع الصورة التانية';
+  document.getElementById('predictionModal').classList.add('open');
+  vibrateTap();
+}
+
+function closePrediction() {
+  document.getElementById('predictionModal').classList.remove('open');
+}
+
+function handlePredUpload(input, n) {
+  if (input.files[0]) {
+    document.getElementById('pred-upload-text-' + n).textContent = '✅ ' + input.files[0].name;
+  }
+}
+
+function preparePrediction() {
+  const wa = document.getElementById('pred-wa').value.trim();
+  const match = document.getElementById('pred-match-name').textContent;
+  const s1 = document.getElementById('pred-score1').value;
+  const s2 = document.getElementById('pred-score2').value;
+  const shot1 = document.getElementById('predUploadInput1').files[0];
+  const shot2 = document.getElementById('predUploadInput2').files[0];
+
+  if (s1 === '' || s2 === '') { showToast('⚠️ اكتب توقعك للنتيجة'); return false; }
+  if (!wa) { showToast('⚠️ ادخل رقم الواتساب'); return false; }
+  if (!shot1 || !shot2) { showToast('⚠️ لازم ترفع الصورتين الاتنين'); return false; }
+
+  document.getElementById('pred-hidden-match').value = match;
+
+  const msg = `🏆 *توقع مونديال جديد – R3 Store*\n━━━━━━━━━━━━━━\n⚽ الماتش: ${match}\n🔢 التوقع: ${s1} - ${s2}\n📱 رقم العميل: ${wa}\n━━━━━━━━━━━━━━\n📸 إرسال الصور مع الرسالة في الواتس`;
+  window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank');
+
+  showToast('✅ تم إرسال توقعك!');
+  return true;
+}
+function sendOrder() {}
+
+function prepareAndSendOrder() {
+  const wa = document.getElementById('ord-wa').value.trim();
+  const game = document.getElementById('ord-game-name').textContent;
+  const acct = document.getElementById('ord-account-select').value;
+  const total = document.getElementById('ord-total').textContent;
+  const screenshot = document.getElementById('uploadFileInput').files[0];
+  const pmEl = document.querySelector('#orderModal input[name="payment_method"]:checked');
+  const pm = pmEl ? pmEl.value : '';
+
+  if (!wa) { showToast('⚠️ ادخل رقم الواتساب'); return false; }
+  if (!screenshot) { showToast('⚠️ ارفع صورة الدفع'); return false; }
+
+  // Fill hidden fields
+  document.getElementById('ord-hidden-game').value = game;
+  document.getElementById('ord-hidden-total').value = total;
+
+  const msg = `🎮 *طلب جديد – R3 Store*\n━━━━━━━━━━━━━━\n📦 اللعبة: ${game}\n💳 النوع: ${acct}\n💰 الإجمالي: ${total}\n📱 رقم العميل: ${wa}\n💸 وسيلة الدفع: ${pm}\n━━━━━━━━━━━━━━\n📸 إرسال الصورة مع الرسالة في الواتس`;
+  window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank');
+
+  return true;
+}
+
+// ===== CART =====
+let cartDiscountApplied = false;
+let cartBaseTotal = 0;
+
+function saveCart() {
+  localStorage.setItem('r3_cart', JSON.stringify(cart));
+}
+
+function addToCart(name, price) {
+  cart.push({ name, price });
+  document.getElementById('cartCount').textContent = cart.length;
+  saveCart();
+  vibrateTap();
+  showToast('✅ تم الإضافة: ' + name);
+}
+
+function openCart() {
+  cartDiscountApplied = false;
+  document.getElementById('cart-discount').value = '';
+  document.getElementById('cart-upload-text').textContent = 'Click to upload payment screenshot';
+  renderCart();
+  document.getElementById('cartPanel').classList.add('open');
+}
+function closeCart() { document.getElementById('cartPanel').classList.remove('open'); }
+
+function renderCart() {
+  const el = document.getElementById('cart-items-list');
+  const formEl = document.getElementById('cart-order-form');
+  if (!cart.length) {
+    el.innerHTML = '<div class="empty-cart">السلة فاضية 🛒</div>';
+    formEl.style.display = 'none';
+    return;
+  }
+  el.innerHTML = cart.map((item, i) => `
+    <div class="cart-item">
+      <span class="ci-name">${item.name}</span>
+      <span class="ci-price">${item.price} L.E</span>
+      <button class="ci-del" onclick="removeFromCart(${i})"><i class="fas fa-times"></i></button>
+    </div>`).join('');
+  cartBaseTotal = cart.reduce((a, c) => a + c.price, 0);
+  document.getElementById('cart-total-val').textContent = fmtPrice(cartBaseTotal) + ' L.E';
+  formEl.style.display = 'block';
+}
+
+function removeFromCart(i) {
+  cart.splice(i, 1);
+  document.getElementById('cartCount').textContent = cart.length || 0;
+  cartDiscountApplied = false;
+  saveCart();
+  renderCart();
+}
+
+function updateCartTotal() {
+  if (!cartDiscountApplied) {
+    document.getElementById('cart-total-val').textContent = fmtPrice(cartBaseTotal) + ' L.E';
+  }
+}
+
+function applyCartDiscount() {
+  if (cartDiscountApplied) return showToast('⚠️ تم تطبيق كود الخصم بالفعل');
+  const code = document.getElementById('cart-discount').value.trim().toUpperCase();
+const discounts = { 'R3NEW1': 10, 'SUMMER26R3': 20, 'R3VIP': 25 };
+if (discounts[code]) {
+    const disc = discounts[code];
+    const newTotal = Math.max(0, cartBaseTotal - disc);
+    document.getElementById('cart-total-val').textContent = fmtPrice(newTotal) + ' L.E';
+    cartDiscountApplied = true;
+    showToast('✅ خصم ' + disc + ' L.E اتطبق!');
+  } else {
+    showToast('❌ كود الخصم غلط');
+  }
+}
+
+function handleCartUpload(input) {
+  if (input.files[0]) {
+    document.getElementById('cart-upload-text').textContent = '✅ ' + input.files[0].name;
+  }
+}
+
+function checkoutCart() {}
+
+function prepareAndSendCart() {
+  const wa = document.getElementById('cart-wa').value.trim();
+  const accountType = document.getElementById('cart-account-type').value;
+  const screenshot = document.getElementById('cartUploadInput').files[0];
+  const pmEl = document.querySelector('#cartPanel input[name="payment_method"]:checked');
+  const pm = pmEl ? pmEl.value : '';
+
+  if (!cart.length) { showToast('السلة فاضية!'); return false; }
+  if (!accountType) { showToast('⚠️ اختر نوع الحساب'); return false; }
+  if (!wa) { showToast('⚠️ ادخل رقم الواتساب'); return false; }
+  if (!screenshot) { showToast('⚠️ ارفع صورة الدفع'); return false; }
+
+  const total = document.getElementById('cart-total-val').textContent;
+  const items = cart.map(c => `• ${c.name} — ${c.price} L.E`).join(' | ');
+
+  // Fill hidden fields
+  document.getElementById('cart-hidden-items').value = items;
+  document.getElementById('cart-hidden-total').value = total;
+
+  const waMsgItems = cart.map(c => `• ${c.name} — ${c.price} L.E`).join('\n');
+  const msg = `🎮 *طلب جديد – R3 Store*\n━━━━━━━━━━━━━━\n📦 المنتجات:\n${waMsgItems}\n💳 النوع: ${accountType}\n💰 الإجمالي: ${total}\n📱 رقم العميل: ${wa}\n💸 وسيلة الدفع: ${pm}\n━━━━━━━━━━━━━━\n📸 إرسال الصورة مع الرسالة في الواتس`;
+  window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank');
+
+  cart = [];
+  cartDiscountApplied = false;
+  document.getElementById('cartCount').textContent = 0;
+  saveCart();
+
+  return true;
+}
+
+// ===== PROFILE =====
+// ===== TOAST =====
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2500);
+}
+// ===== وضع الأدمن (يظهر بيه زرار نسخ السعر بس) =====
+// ⚠️ غيّر الكود ده لأي حاجة انت بس عارفها. الكود ظاهر في كود الصفحة، يعني مش حماية قوية،
+// هو بس بيمنع الزباين العاديين من الوصول بالغلط لحاجة مش لهم.
+const ADMIN_CODE = 'R3BOSS26';
+
+function openAdminGate() {
+  document.getElementById('adminGateModal').classList.add('open');
+  setTimeout(() => document.getElementById('admin-code-input').focus(), 100);
+}
+function closeAdminGate() {
+  document.getElementById('adminGateModal').classList.remove('open');
+  document.getElementById('admin-code-input').value = '';
+}
+function submitAdminCode() {
+  const val = document.getElementById('admin-code-input').value.trim();
+  if (val === ADMIN_CODE) {
+    document.body.classList.add('admin-unlocked');
+    sessionStorage.setItem('r3_admin_unlocked', '1');
+    closeAdminGate();
+    showToast('✅ اتفتح وضع الأدمن — زرار نسخ السعر ظاهر دلوقتي');
+  } else {
+    showToast('❌ كود غلط');
+  }
+}
+// لو الأدمن كان فاتح وضع الأدمن قبل كده في نفس الجلسة، سيبه شغال
+if (sessionStorage.getItem('r3_admin_unlocked') === '1') {
+  document.addEventListener('DOMContentLoaded', () => document.body.classList.add('admin-unlocked'));
+}
+
+// ===== أداة نسخ عامة تشتغل حتى لو navigator.clipboard مش متاحة (مثلاً file:// أو بدون HTTPS) =====
+function copyTextRobust(text, onSuccess, onFail) {
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(text).then(onSuccess).catch(() => copyTextFallback(text, onSuccess, onFail));
+  } else {
+    copyTextFallback(text, onSuccess, onFail);
+  }
+}
+function copyTextFallback(text, onSuccess, onFail) {
+  try {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly', '');
+    ta.style.position = 'fixed';
+    ta.style.top = '0';
+    ta.style.left = '-9999px';
+    document.body.appendChild(ta);
+    const isIOS = /iP(hone|ad|od)/.test(navigator.userAgent);
+    if (isIOS) {
+      const range = document.createRange();
+      range.selectNodeContents(ta);
+      const sel = window.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(range);
+      ta.setSelectionRange(0, text.length);
+    } else {
+      ta.select();
+    }
+    const ok = document.execCommand('copy');
+    document.body.removeChild(ta);
+    if (ok) { onSuccess && onSuccess(); } else { onFail && onFail(); }
+  } catch (e) {
+    onFail && onFail();
+  }
+}
+
+// ===== نسخ رسالة سعر المنتج (لإرسالها للعميل على واتساب) =====
+function copyProductPrice(storeKey, idx) {
+  const p = _allProducts[storeKey] && _allProducts[storeKey][idx];
+  if (!p) return;
+
+  // إيموجي المربع حسب نوع/منصة السعر
+  const platformSquare = (platform, type) => {
+    const l = `${platform || ''} ${type || ''}`.toLowerCase();
+    if (l.includes('ps5')) return '⬜️';
+    if (l.includes('ps4')) return '🟦';
+    if (l.includes('sec')) return '🟨';
+    if (l.includes('home')) return '🟩';
+    if (l.includes('sign') || l.includes('digital')) return '🟪';
+    return '🔷';
+  };
+
+  const priceBlocks = (p._prices || [])
+    .filter(pr => pr.price)
+    .map(pr => {
+      const label = pr.type || pr.platform;
+      return `${platformSquare(pr.platform, pr.type)} ${label}\nEGP ${Number(pr.price).toFixed(2)}`;
+    });
+
+  const sep = '════════════════';
+  let msg = `*R3 Store* ⚡️
+  ════════════════
+  ⬜️:PS5🟦:PS4🟨:SECONDARY PS4 & PS5\n${sep}\n${p._icon || '🎮'} ${p._title}\n${sep}\n`;
+
+  if (priceBlocks.length) {
+    msg += priceBlocks.join('\n\n');
+  } else {
+    msg += 'السعر: غير متوفر حاليًا';
+  }
+
+  msg += `\n\n⚡️\ للطلب والشراء:
+  r3store1.netlify.app`;
+
+  if (p._desc) {
+    msg += `\n\nوصف اللعبه:\n• ${p._desc}`;
+  }
+
+  copyTextRobust(
+    msg,
+    () => showToast('✅ اتنسخت رسالة السعر — جاهزة للصق في واتساب'),
+    () => showToast('❌ حصل خطأ في النسخ، جرب تختار النص يدويًا')
+  );
+}
+
+// ===== نسخ الرقم =====
+function copyNumber(num, btn) {
+  copyTextRobust(num, () => {
+    btn.textContent = '✓ تم';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = 'نسخ';
+      btn.classList.remove('copied');
+    }, 2000);
+  }, () => {
+    showToast('❌ حصل خطأ في النسخ');
+  });
+}
+</script>
+<!-- THANK YOU OVERLAY -->
+<div id="thankyouOverlay" style="display:none;position:fixed;inset:0;z-index:99999;background:#0a0a0a;align-items:center;justify-content:center;padding:20px;">
+  <div style="text-align:center;max-width:360px;">
+    <div style="font-size:4rem;margin-bottom:16px;">✅</div>
+    <div style="font-family:'Barlow Condensed',sans-serif;font-size:2.2rem;font-weight:900;letter-spacing:4px;color:#25d366;margin-bottom:10px;">ORDER RECEIVED</div>
+    <p style="color:#888;font-size:0.9rem;line-height:1.7;margin-bottom:28px;">وصلنا طلبك وصورة الدفع بنجاح!<br>هيتم التواصل معاك على الواتساب في أقرب وقت.</p>
+    <button onclick="document.getElementById('thankyouOverlay').style.display='none'" style="display:inline-block;padding:13px 32px;background:#1a6bbf;color:#fff;border:none;border-radius:50px;font-family:'Cairo';font-weight:700;font-size:0.95rem;cursor:pointer;">← الرجوع للمتجر</button>
+  </div>
+</div>
+</body>
+</html>
