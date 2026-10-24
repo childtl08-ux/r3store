@@ -1,0 +1,16 @@
+name: Keep Supabase alive
+on:
+  schedule:
+    - cron: '0 9 * * *'
+  workflow_dispatch:
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping database
+        run: |
+          curl -fsS "https://lxyicobwtcivbwvgywsc.supabase.co/rest/v1/products?select=id&limit=1" \
+            -H "apikey: ${KEY}" -H "Authorization: Bearer ${KEY}"
+        env:
+          KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx4eWljb2J3dGNpdmJ3dmd5d3NjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI3NTE2OTEsImV4cCI6MjEwODMyNzY5MX0.Q7dvCJcGPubAifNDCoowPm1iaMFr7MikZY6xvFmTQmY
+          
